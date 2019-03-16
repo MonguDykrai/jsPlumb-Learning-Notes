@@ -15,39 +15,29 @@
     style="width:100%; min-height:500px;"
   >
 
-    <!-- Start -->
-    <div
-      id="startpoint"
-      class="startpoint point window node"
-      style="left: 150px; top:20px;"
-      data-nodetype="startpoint"
-    >
-      Start
-    </div>
-
     <!-- Menu -->
     <div
       id="menuContainer"
       class="menu"
-      style="left: 600px;"
+      style="left: 20px;"
     >
       <p style="text-align: center;">Menu</p>
       <div class="menu_button_container">
         <div class="button_add_task button menu_button ele-draggable" id="button_add_task" draggable="true">Add Task</div>
-        <!-- <div class="button_add_decision button menu_button ele-draggable" id="button_add_decision" draggable="true">Add Decision</div> -->
-        <button id="saveButton" class="button menu_button">Save</button>
-        <button id="loadButton" class="button menu_button">Load</button>
+        <div>
+          <button id="saveButton" class="button menu_button">Save</button>
+          <button id="loadButton" class="button menu_button">Load</button>
+        </div>
+        <div>
+            <button
+              id="resetButton"
+              class="button menu_button"
+              style="background: rgba(0, 169, 200, 1); float: right;"
+            >
+              Reset
+            </button>
+        </div>
       </div>
-    </div>
-
-    <!-- End -->
-    <div
-      id="endpoint"
-      class="endpoint point window node"
-      style="left: 150px; top:400px;"
-      data-nodetype="endpoint"
-    >
-      End
     </div>
   </div>
 
@@ -90,48 +80,6 @@
         ]
       });
 
-      // var workflowConnectorStartpoint = {
-      //   isSource: true,
-      //   isTarget: false,
-      //   maxConnections: 1,
-      //   anchor: "BottomCenter"
-      // };
-
-      // var workflowConnectorEndpoint = {
-      //   isSource: false,
-      //   isTarget: true,
-      //   maxConnections: -1,
-      //   anchor: "TopCenter",
-      //   paintStyle: { fillStyle: "red" },
-      //   endpoint: ["Rectangle", { width: 12, height: 12 }]
-      // };
-
-      // jsPlumb.addEndpoint(
-      //   $(".startpoint"),
-      //   workflowConnectorStartpoint
-      // );
-
-      // jsPlumb.addEndpoint(
-      //   $(".endpoint"),
-      //   workflowConnectorEndpoint
-      // );
-
-      jsPlumb.addEndpoint(
-        $(".startpoint"),
-        {
-          isSource: true,
-          anchor: "Right"
-        }
-      );
-
-      jsPlumb.addEndpoint(
-        $(".endpoint"),
-        {
-          isTarget: true,
-          anchor: "Left"
-        }
-      );
-
       $("#" + htmlBase).on("click", ".button_remove", function () {
         var parentnode = $(this)[0].parentNode.parentNode;
         jsPlumb.detachAllConnections(parentnode);
@@ -140,11 +88,11 @@
       });
       
       $(".ele-draggable").on("dragstart", (ev, ff) => {
-        const { originalEvent } = ev;
+        const { originalEvent, target } = ev;
         offsetX = ev.offsetX;
         offsetY = ev.offsetY;
 
-        originalEvent.dataTransfer.setData("text/plain", ev.target.id); // e.g. button_add_task
+        originalEvent.dataTransfer.setData("text/plain", target.id); // e.g. button_add_task
       });
 
       $("#drawingArea").on("dragover", ev => {
@@ -162,13 +110,9 @@
         if (!originalEvent.dataTransfer) return; // 连线时会触发 drop 事件，值为 undfined
 
         var data = originalEvent.dataTransfer.getData("text");
-        switch (data) {
-          case "button_add_task":
-            addTask({posX, posY});
-            break;
-          // case "button_add_decision":
-          //   addDecision({posX, posY});
-          //   break;
+
+        if (data == "button_add_task") {
+          addTask({posX, posY});
         }
       });
 
@@ -203,39 +147,12 @@
       `)
       .appendTo("#" + htmlBase);
 
-      // var taskSourceConnectorEndpoint = {
-      //   isSource: true,
-      //   isTarget: false,
-      //   maxConnections: 1,
-      //   anchor: [0.5, 1, 0, 1, 0, 0, "task_end endpoint"],
-      // };
-
-      // var taskTargetConnectorEndpoint = {
-      //   isSource: false,
-      //   isTarget: true,
-      //   maxConnections: 1,
-      //   anchor: [0.5, 0, 0, -1, 0, 0, "task_end endpoint"],
-      //   paintStyle: { fillStyle: "red" },
-      //   endpoint: ["Rectangle", { width: 12, height: 12 }]
-      // };
-
-      // jsPlumb.addEndpoint(
-      //   $("#" + id),
-      //   taskSourceConnectorEndpoint
-      // );
-
-      // jsPlumb.addEndpoint(
-      //   $("#" + id),
-      //   taskTargetConnectorEndpoint
-      // );
-
       jsPlumb.addEndpoint(
         $("#" + id),
         {
           uuid: id + "-in",
           isTarget: true,
-          anchor: "Left",
-          // endpoint: "Dot"
+          anchor: "Left"
         }
       );
 
@@ -244,72 +161,12 @@
         {
           uuid: id + "-out",
           isSource: true,
-          anchor: "Right",
-          // endpoint: "Dot"
+          anchor: "Right"
         }
       );
 
       jsPlumb.draggable($("#" + id));
-      return id;
     }
-
-    // function addDecision({id, posX = 0, posY = 0}) {
-      
-    //   if (typeof id === "undefined") {
-    //     numberOfElements++;
-    //     id = "decisioncontainer" + numberOfElements;
-    //   }
-
-    //   $(`
-    //     <div class="window decision node" id="${id}" data-nodetype="decision" style="left: ${posX}px; top: ${posY}px;">
-    //       <div class="ctrl_container">
-    //         <div class="button_remove">x</div>
-    //       </div>
-    //     </div>
-    //   `)
-    //   .appendTo("#" + htmlBase);
-
-    //   var upperDecisionConnectorEndpoint = {
-    //     isSource: false,
-    //     isTarget: true,
-    //     maxConnections: 1,
-    //     anchor: [0.5, 0, 0, -1, 16, 0, "upper_dec_end endpoint"],
-    //     paintStyle: { fillStyle: "red" },
-    //     endpoint: ["Rectangle", { width: 12, height: 12 }]
-    //   };
-
-    //   var leftDecisionConnectorEndpoint = {
-    //     isSource: true,
-    //     isTarget: false,
-    //     maxConnections: 1,
-    //     anchor: [0, 0.5, 0, 1, 0, 16, "left_dec_start startpoint"]
-    //   };
-
-    //   var rightDecisionConnectorEndpoint = {
-    //     isSource: true,
-    //     isTarget: false,
-    //     maxConnections: 1,
-    //     anchor: [1.0, 0.5, 0, 1, 32, 16, "right_dec_start startpoint"]
-    //   };
-
-    //   jsPlumb.addEndpoint(
-    //     $("#" + id),
-    //     leftDecisionConnectorEndpoint
-    //   );
-
-    //   jsPlumb.addEndpoint(
-    //     $("#" + id),
-    //     rightDecisionConnectorEndpoint
-    //   );
-
-    //   jsPlumb.addEndpoint(
-    //     $("#" + id),
-    //     upperDecisionConnectorEndpoint
-    //   );
-
-    //   jsPlumb.draggable($("#" + id));
-    //   return id;
-    // }
 
     function saveFlowchart() {
       var nodes = []
@@ -331,9 +188,8 @@
       $.each(jsPlumb.getConnections(), function (idx, connection) {
         console.log(connection)
         connections.push({
-          connectionId: connection.id,
-          pageSourceId: connection.sourceId,
-          pageTargetId: connection.targetId
+          sourceId: connection.sourceId,
+          targetId: connection.targetId
         });
       });
 
@@ -352,22 +208,21 @@
       var flowChartJson = $("#jsonOutput").val();
       var flowChart = JSON.parse(flowChartJson);
       var nodes = flowChart.nodes;
+
       $.each(nodes, function (index, elem) {
-        if (elem.nodetype === "startpoint") {
-          repositionElement("startpoint", elem.positionX, elem.positionY);
-        } else if (elem.nodetype === "endpoint") {
-          repositionElement("endpoint", elem.positionX, elem.positionY);
-        } else if (elem.nodetype === "task") {
-          var id = addTask({id: elem.blockId});
+        const id = elem.blockId;
+        if (elem.nodetype == "task") {
+          addTask({ id });
           // console.error(id);
           repositionElement(id, elem.positionX, elem.positionY);
         }
       });
 
       var connections = flowChart.connections;
+
       $.each(connections, function (index, elem) {
         jsPlumb.connect({
-          uuids: [elem.pageSourceId + "-out", elem.pageTargetId + "-in"]
+          uuids: [elem.sourceId + "-out", elem.targetId + "-in"]
         });
       });
 
@@ -375,6 +230,7 @@
     }
 
     function repositionElement(id, posX, posY) {
+      console.log(id);
       $("#" + id).css("left", posX);
       $("#" + id).css("top", posY);
       jsPlumb.repaint(id);
