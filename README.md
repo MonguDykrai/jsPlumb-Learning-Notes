@@ -59,3 +59,56 @@ Codepen: <https://codepen.io/MonguDykrai/pen/RdyGjL>
 Codepen: <https://codepen.io/MonguDykrai/pen/MxGbwK>
 
 <http://api.jquery.com/html/>
+
+## save and load
+
+Save
+
+```js
+$.each(jsPlumb.getConnections(), function (idx, connection) {
+    connections.push({
+    connectionId: connection.id,
+    pageSourceId: connection.sourceId,
+    pageTargetId: connection.targetId,
+    anchors: $.map(connection.endpoints, function(endpoint) {
+
+      return [[endpoint.anchor.x, 
+      endpoint.anchor.y, 
+      endpoint.anchor.orientation[0], 
+      endpoint.anchor.orientation[1],
+      endpoint.anchor.offsets[0],
+      endpoint.anchor.offsets[1]]];
+
+    })
+  });
+});
+```
+
+Load
+
+```js
+$.each(connections, function( index, elem ) {
+    var connection1 = jsPlumb.connect({
+    source: elem.pageSourceId,
+    target: elem.pageTargetId,
+    anchors: elem.anchors
+  });
+
+});
+```
+
+<https://stackoverflow.com/questions/20620719/save-and-load-jsplumb-flowchart-including-exact-anchors-and-connections>
+
+## Connectors
+
+### gap
+
+> optional, defaults to 0 pixels. Lets you specify a gap between the end of the Connector and the elements to which it is attached.
+
+![](./images/Snipaste_2019-03-17_06-15-24.png)
+
+### cornerRadius
+
+![](./images/Snipaste_2019-03-17_06-17-56.png)
+
+<http://jsplumb.github.io/jsplumb/connectors.html>
