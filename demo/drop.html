@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <!-- <link rel="stylesheet" href="./styles/index.css" /> -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
+
+    #shape-panel {
+      position: absolute;
+      width: 160px;
+      height: 100%;
+    }
+
+    #shape-panel>h3 {
+      margin-bottom: 16px;
+      height: 36px;
+      line-height: 36px;
+      font-size: 14px;
+      text-align: center;
+      border-bottom: 1px solid #ccc;
+      box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    }
+
+    #designer-viewport {
+      margin-left: 160px;
+      height: 100%;
+    }
+
+    #designer-layout {
+      /* display: flex; */
+      /* justify-content: center; */
+      /* align-items: center; */
+      position: relative;
+      background: url(./images/canvas_bg.jpg) repeat;
+      height: 100%;
+      z-index: 0;
+    }
+
+    #canvas-container {
+      position: relative;
+      left: 120px;
+      top: 60px;
+      width: 1000px;
+      height: 800px;
+      background: #fff;
+      /* background: #f2f2f2; */
+      overflow: visible;
+      box-shadow: 3px 3px 6px #888;
+      z-index: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="shape-panel">
+    <h3>功能列表</h3>
+
+    <div class="shape-box" id="shape-box" style="width: 120px; height: 90px; margin: 0 auto;" draggable="true">
+      <canvas class="shape-canvas" width="120" height="90"></canvas>
+    </div>
+  </div>
+
+  <div id="designer-viewport">
+    <div id="designer-layout">
+      <div id="canvas-container">
+        <!-- <canvas id="designer-grids" width="1000" height="800"></canvas> -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var canvas = document.getElementsByClassName("shape-canvas")[0];
+    var ctx = canvas.getContext("2d");
+
+    ctx.beginPath();
+    ctx.lineWidth = "2";
+    ctx.strokeStyle = "black";
+    ctx.rect(10, 10, 100, 70);
+    ctx.stroke();
+    ctx.fillStyle = "#fff"; // 填充背景色
+    ctx.fill(); // 填充背景色
+
+    // > textAlign < https://www.w3schools.com/graphics/canvas_text.asp
+    ctx.font = "12px Microsoft YaHei";
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+    ctx.fillText("HIVE提取", canvas.width / 2, canvas.height / 2 + 5);
+
+    const shapeBox = document.querySelector(".shape-box");
+    shapeBox.addEventListener("dragstart", ev => {
+      var offsetX = ev.offsetX;
+      var offsetY = ev.offsetY;
+      console.log(offsetX, offsetY);
+      console.log(ev)
+      console.log(ev.target.id)
+      ev.dataTransfer.setData("text", ev.target.id);
+    });
+  </script>
+
+  <script>
+    const canvasContainer = document.querySelector("#canvas-container");
+    canvasContainer.addEventListener("dragover", ev => {
+      ev.preventDefault();
+    });
+
+    canvasContainer.addEventListener("drop", ev => {
+      console.log(ev.pageY); // 输出的是鼠标指针相对于画布的坐标
+      ev.preventDefault();
+      // var data = ev.dataTransfer.getData("text");
+      // ev.target.appendChild(document.getElementById(data));
+    });
+
+    canvasContainer.addEventListener("dragover", ev => {
+      console.log(ev.pageY);
+    })
+  </script>
+</body>
+
+</html>

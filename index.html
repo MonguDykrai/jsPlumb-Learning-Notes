@@ -33,8 +33,8 @@
     >
       <p style="text-align: center;">Menu</p>
       <div class="menu_button_container">
-        <div class="button_add_task button menu_button" draggable="true">Add Task</div>
-        <div class="button_add_decision button menu_button" draggable="true">Add Decision</div>
+        <div class="button_add_task button menu_button" id="button_add_task" draggable="true">Add Task</div>
+        <div class="button_add_decision button menu_button" id="button_add_decision" draggable="true">Add Decision</div>
         <button id="saveButton" class="button menu_button">Save</button>
         <button id="loadButton" class="button menu_button">Load</button>
       </div>
@@ -66,6 +66,8 @@
     // https://stackoverflow.com/questions/7405637/save-and-load-a-flowchart-on-jsplumb
     // https://stackoverflow.com/questions/20620719/save-and-load-jsplumb-flowchart-including-exact-anchors-and-connections
 
+    var offsetX = 0;
+    var offsetY = 0; // 开始拖拽时鼠标指针位于元素的坐标值
     var numberOfElements = 0;
     var htmlBase = "drawingArea";
 
@@ -115,7 +117,6 @@
       );
 
       $("#" + htmlBase).on("click", ".button_remove", function () {
-        console.log();
         var parentnode = $(this)[0].parentNode.parentNode;
         jsPlumb.detachAllConnections(parentnode);
         jsPlumb.removeAllEndpoints(parentnode);
@@ -126,21 +127,42 @@
       //   addTask();
       // });
 
-      $(".button_add_task")[0].addEventListener("dragstart", function (e) {
-        console.log(e);
-        // e.dataTransfer.setData("text/plain", "Text to drag");
+      
+
+      $(".button_add_task").on("dragstart", ev => {
+        offsetX = ev.offsetX;
+        offsetY = ev.offsetY;
+        // console.log(offsetX, offsetY); // 开始拖拽时鼠标指针位于元素的坐标值
+        ev.originalEvent.dataTransfer.setData("text/plain", ev.target.id);
       });
 
-      // $(".button_add_task")[0].addEventListener("dragover", function (e) {
-      //   console.error(e);
-      // });
-
-      $(".button_add_task")[0].addEventListener("dragend", function (e) {
-        console.log(e);
+      $(".button_add_decision").on("dragstart", ev => {
+        offsetX = ev.offsetX;
+        offsetY = ev.offsetY;
+        // console.log(offsetX, offsetY); // 开始拖拽时鼠标指针位于元素的坐标值
+        ev.originalEvent.dataTransfer.setData("text/plain", ev.target.id);
       });
 
-      $("#drawingArea").on("dragover", function (ev) {
-        console.log(1)
+      $("#drawingArea").on("dragover", ev => {
+        ev.preventDefault();
+      });
+
+      $("#drawingArea").on("drop", ev => {
+        var posX = ev.pageX - offsetX;
+        var posY = ev.pageY - offsetY;
+        offsetX = 0;
+        offsetY = 0;
+        console.log(posX, posY)
+        // console.log(posX, posY);
+        var data = ev.originalEvent.dataTransfer.getData("text");
+        switch (data) {
+          case "button_add_task":
+            addTask(undefined, {posX, posY});
+            break;
+          case "button_add_decision":
+            addDecision(undefined, {posX, posY});
+            break;
+        }
       });
 
       // $(".button_add_decision").click(function () {
@@ -156,7 +178,8 @@
       });
     });
 
-    function addTask(id) {
+    function addTask(id, pos) {
+      const { posX, posY } = pos;
       console.warn(id);
       if (typeof id === "undefined") {
         numberOfElements++;
@@ -165,7 +188,7 @@
       }
 
       $(`
-        <div class="window task node" id="${id}" data-nodetype="task" style="left:30px; top:30px;">
+        <div class="window task node" id="${id}" data-nodetype="task" style="left: ${posX}px; top: ${posY}px;">
           <div class="ctrl_container">
             <div class="button_remove">x</div>
           </div>
@@ -207,14 +230,15 @@
       return id;
     }
 
-    function addDecision(id) {
+    function addDecision(id, pos) {
+      const {posX, posY} = pos;
       if (typeof id === "undefined") {
         numberOfElements++;
         id = "decisioncontainer" + numberOfElements;
       }
 
       $(`
-        <div class="window decision node" id="${id}" data-nodetype="decision" style="left:30px; top:30px;">
+        <div class="window decision node" id="${id}" data-nodetype="decision" style="left: ${posX}px; top: ${posY}px;">
           <div class="ctrl_container">
             <div class="button_remove">x</div>
           </div>
