@@ -40,6 +40,34 @@
       </div>
     </div>
 
+    <!-- task -->
+    <!-- <div
+      id="taskcontainer0"
+      class="window task"
+      style="left: 120px; top: 200px; display: none;"
+      data-nodetype="task"
+    >
+      <div class="ctrl_container">
+        <div class="button_remove">x</div>
+      </div>
+      <div class="details_container">
+        <label class="detail_label">Name</label>
+        <input class="detail_text" value="" />
+      </div>
+    </div> -->
+
+    <!-- decision -->
+    <!-- <div
+      id="decisioncontainer0"
+      class="window decision"
+      style="left: 250px; top:300px; display:none;"
+      data-nodetype="decision"
+    >
+      <div class="ctrl_container">
+        <div class="button_remove">x</div>
+      </div>
+    </div> -->
+
     <!-- End -->
     <div
       id="endpoint"
@@ -69,6 +97,11 @@
     var htmlBase = 'drawingArea';
 
     jsPlumb.ready(function () {
+      debugger
+
+      //FIX DOM:
+      // $(("#taskcontainer0"))[0].innerHTML = $(("#taskcontainer0"))[0].innerHTML;
+      // $(("#decisioncontainer0"))[0].innerHTML = $(("#decisioncontainer0"))[0].innerHTML;
 
       jsPlumb.draggable($(".window"));
 
@@ -145,18 +178,35 @@
         console.log(id)
       }
 
-      $(`
-        <div class="window task node" id="${id}" data-nodetype="task" style="left:30px; top:30px;">
-          <div class="ctrl_container">
-            <div class="button_remove">x</div>
-          </div>
-          <div class="details_container">
-            <label class="detail_label">Name</label>
-            <input class="detail_text" value="" />
-          </div>
+      /**
+        * 代码执行结束后，将在 DIV #drawingArea 中添加如下内容
+        * <div
+        *   class="window task node _jsPlumb_endpoint_anchor_task_end endpoint ui-draggable"
+        *   id="taskcontainer??"
+        *   data-nodetype="task"
+        *   style="left: 184px; top: 164px;"
+        * >
+        *   <div class="ctrl_container">
+        *     <div class="button_remove">x</div>
+        *   </div>
+        *   <div class="details_container">
+        *     <label class="detail_label">Name</label>
+        *     <input class="detail_text" value="">
+        *   </div>
+        * </div>
+        *
+        */
+      // $('<div class="window task node" id="' + id + '" data-nodetype="task" style="left:30px; top:30px;">').appendTo('#' + htmlBase).html($(("#taskcontainer0"))[0].innerHTML);
+
+      $('<div class="window task node" id="' + id + '" data-nodetype="task" style="left:30px; top:30px;">').appendTo('#' + htmlBase).html(`
+        <div class="ctrl_container">
+          <div class="button_remove">x</div>
         </div>
-      `)
-      .appendTo('#' + htmlBase);
+        <div class="details_container">
+          <label class="detail_label">Name</label>
+          <input class="detail_text" value="" />
+        </div>
+      `);
 
       var taskSourceConnectorEndpoint = {
         isSource: true,
@@ -193,15 +243,13 @@
         numberOfElements++;
         id = "decisioncontainer" + numberOfElements;
       }
+      // $('<div class="window decision node" id="' + id + '" data-nodetype="decision" style="left:30px; top:30px;">').appendTo('#' + htmlBase).html($(("#decisioncontainer0"))[0].innerHTML);
 
-      $(`
-        <div class="window decision node" id="${id}" data-nodetype="decision" style="left:30px; top:30px;">
-          <div class="ctrl_container">
-            <div class="button_remove">x</div>
-          </div>
+      $('<div class="window decision node" id="' + id + '" data-nodetype="decision" style="left:30px; top:30px;">').appendTo('#' + htmlBase).html(`
+        <div class="ctrl_container">
+          <div class="button_remove">x</div>
         </div>
-      `)
-      .appendTo('#' + htmlBase);
+      `);
 
       var upperDecisionConnectorEndpoint = {
         isSource: false,
