@@ -49,8 +49,8 @@
 
   <script src="https://cdn.bootcss.com/jquery/2.2.1/jquery.js"></script>
   <script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
-  <script src="https://cdn.bootcss.com/jsPlumb/2.9.0/js/jsplumb.js"></script>
-  <!-- <script src="https://cdn.bootcss.com/jsPlumb/1.5.5/jquery.jsPlumb.js"></script> -->
+  <!-- <script src="https://cdn.bootcss.com/jsPlumb/2.9.0/js/jsplumb.js"></script> -->
+  <script src="https://cdn.bootcss.com/jsPlumb/1.5.5/jquery.jsPlumb.js"></script>
 
   <script>
     // https://stackoverflow.com/questions/7405637/save-and-load-a-flowchart-on-jsplumb
@@ -65,15 +65,10 @@
 
       jsPlumb.draggable($(".window"));
 
-      // console.log(jsPlumb.Defaults)
-
       jsPlumb.importDefaults({
-        MaxConnections: 1,
         Endpoint: ["Dot", { radius: 8 }],
-        EndpointStyle: { fill: "#426020" },
-        EndpointHoverStyle: { fill: "red" },
-        PaintStyle: { stroke: '#5c872b', strokeWidth: 6 },
-        HoverPaintStyle: { stroke: "#42a62c", strokeWidth: 6 },
+        EndpointStyle: { fillStyle: "#4A6" },
+        HoverPaintStyle: { strokeStyle: "#42a62c", lineWidth: 8 },
         Connector: ["Flowchart"],
         ConnectionOverlays: [
           ["Arrow", {
@@ -87,8 +82,7 @@
 
       $("#" + htmlBase).on("click", ".button_remove", function () {
         var parentnode = $(this)[0].parentNode.parentNode;
-        // jsPlumb.detachAllConnections(parentnode);
-        jsPlumb.deleteConnectionsForElement(parentnode);
+        jsPlumb.detachAllConnections(parentnode);
         jsPlumb.removeAllEndpoints(parentnode);
         $(parentnode).remove();
       });
@@ -98,7 +92,7 @@
         offsetX = ev.offsetX;
         offsetY = ev.offsetY;
 
-        originalEvent.dataTransfer.setData("text", target.id); // e.g. button_add_task
+        originalEvent.dataTransfer.setData("text/plain", target.id); // e.g. button_add_task
       });
 
       $("#drawingArea").on("dragover", ev => {
@@ -153,23 +147,12 @@
       `)
       .appendTo("#" + htmlBase);
 
-      console.log($("#" + id))
-
       jsPlumb.addEndpoint(
         $("#" + id),
         {
           uuid: id + "-in",
           isTarget: true,
-          anchor: [0, 0.3]
-        }
-      );
-
-      jsPlumb.addEndpoint(
-        $("#" + id),
-        {
-          uuid: id + "-in",
-          isTarget: true,
-          anchor: [0, 0.7]
+          anchor: "Left"
         }
       );
 
