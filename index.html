@@ -28,7 +28,7 @@
     <!-- Menu -->
     <div
       id="menuContainer"
-      class="window menu"
+      class="menu"
       style="left: 600px;"
     >
       <p style="text-align: center;">Menu</p>
@@ -73,7 +73,7 @@
 
     jsPlumb.ready(function () {
 
-      // jsPlumb.draggable($(".window"));
+      jsPlumb.draggable($(".window"));
 
       jsPlumb.importDefaults({
         Endpoint: ["Dot", { radius: 8 }],
@@ -137,23 +137,29 @@
       });
 
       $(".button_add_decision").on("dragstart", ev => {
+        console.log(ev.target.id)
         offsetX = ev.offsetX;
         offsetY = ev.offsetY;
         // console.log(offsetX, offsetY); // 开始拖拽时鼠标指针位于元素的坐标值
+        console.log(ev.target.id)
         ev.originalEvent.dataTransfer.setData("text/plain", ev.target.id);
       });
 
       $("#drawingArea").on("dragover", ev => {
+        
         ev.preventDefault();
       });
 
       $("#drawingArea").on("drop", ev => {
+        console.log(ev)
         var posX = ev.pageX - offsetX;
         var posY = ev.pageY - offsetY;
         offsetX = 0;
         offsetY = 0;
         console.log(posX, posY)
         // console.log(posX, posY);
+        if (!ev.originalEvent.dataTransfer) return;
+
         var data = ev.originalEvent.dataTransfer.getData("text");
         switch (data) {
           case "button_add_task":
@@ -179,7 +185,9 @@
     });
 
     function addTask(id, pos) {
-      const { posX, posY } = pos;
+      let posX = pos ? pos.posX : 0;
+      let posY = pos ? pos.posY : 0;
+
       console.warn(id);
       if (typeof id === "undefined") {
         numberOfElements++;
@@ -231,7 +239,9 @@
     }
 
     function addDecision(id, pos) {
-      const {posX, posY} = pos;
+      let posX = pos ? pos.posX : 0;
+      let posY = pos ? pos.posY : 0;
+      
       if (typeof id === "undefined") {
         numberOfElements++;
         id = "decisioncontainer" + numberOfElements;
