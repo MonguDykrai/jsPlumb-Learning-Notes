@@ -45,7 +45,7 @@
 }
 
 .decision {
-  transform: rotate(-45deg);
+  /* transform: rotate(-45deg); */
   overflow: hidden;
   border: 1px solid #346789;
   border-radius: 0.3em;
@@ -68,7 +68,7 @@
   height: 80px;
   padding: 0 10px;
   text-align: center;
-  transform: rotate(45deg);
+  /* transform: rotate(45deg); */
   vertical-align: middle;
   width: 80px;
 }

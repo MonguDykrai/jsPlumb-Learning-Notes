@@ -6,170 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <style>
-    .window {}
-
-    .window:hover {
-      cursor: pointer;
-    }
-
-    .menu {
-      background-color: #EFEFEF;
-      border: 1px solid #346789;
-      box-shadow: 2px 2px 5px #AAAAAA;
-      color: black;
-      min-height: 3em;
-      position: absolute;
-      min-width: 5em;
-    }
-
-    .task {
-      background-color: #EEEEEF;
-      border: 1px solid #346789;
-      border-radius: 0.5em;
-      box-shadow: 2px 2px 5px #AAAAAA;
-      color: black;
-      min-height: 3em;
-      position: absolute;
-      min-width: 5em;
-    }
-
-    .point {
-      background-color: #333333;
-      border: 1px solid #AAAAAA;
-      border-radius: 50%;
-      box-shadow: 2px 2px 5px #AAAAAA;
-      color: white;
-      min-width: 50px;
-      min-height: 30px;
-      font-size: 11pt;
-      padding: 10px;
-      position: absolute;
-      text-align: center;
-    }
-
-    .point:hover {
-      box-shadow: 2px 2px 19px #AAAAAA;
-    }
-
-    .decision {
-      transform: rotate(-45deg);
-      overflow: hidden;
-      border: 1px solid #346789;
-      border-radius: 0.3em;
-      color: black;
-      backface-visibility: hidden;
-      background: none repeat scroll 0 0 #F4F4F4;
-      box-shadow: 0 0 0 1px #CCCCCC;
-      color: #000000;
-      display: block;
-      height: 80px;
-      overflow: hidden;
-      /* position: relative; */
-      position: absolute;
-      text-decoration: none;
-      width: 80px;
-    }
-
-    .decision .ctrl_container {
-      display: table-cell;
-      height: 80px;
-      padding: 0 10px;
-      text-align: center;
-      transform: rotate(45deg);
-      vertical-align: middle;
-      width: 80px;
-    }
-
-    .button {
-      text-align: center;
-      border: 1px solid;
-      margin: 5px;
-    }
-
-    .button:hover {
-      cursor: pointer;
-    }
-
-    .menu_button {
-      padding: 5px;
-    }
-
-    .menu_button:hover {
-      background-color: #AAAAAA;
-      color: black;
-    }
-
-    .button_add {
-      background-color: #00CC00;
-      float: left;
-      border-radius: 50%;
-      box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
-      padding: 2px;
-      height: 25px;
-      width: 25px;
-      color: grey;
-    }
-
-    .button_add:hover {
-      background-color: #00AA00;
-      color: black;
-    }
-
-    .button_remove {
-      font-size: 9pt;
-      color: darkgrey;
-      border-radius: 30%;
-      box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
-      padding: 5px;
-      min-width: 10px;
-      max-width: 15px;
-      text-align: center;
-    }
-
-    .task .button_remove {
-      float: right;
-    }
-
-    .decision .button_remove {
-      margin: auto auto;
-    }
-
-    .button_remove:hover {
-      background-color: darkred;
-      color: white;
-    }
-
-    .menu_button_container {
-      margin: 5px;
-    }
-
-    .ctrl_container {
-      margin: 5px;
-      height: 40px;
-    }
-
-    .details_container {
-      margin: 5px;
-      min-height: 40px;
-    }
-
-    .detail_label {
-      font-size: 9pt;
-      color: grey;
-    }
-
-    .detail_text {
-      width: 80px;
-      font-size: 10pt;
-    }
-
-    ._jsPlumb_connector,
-    ._jsPlumb_startpoint {
-      cursor: pointer;
-    }
-  </style>
-  <!-- <link rel="stylesheet" href="./index.css"> -->
+  <link rel="stylesheet" href="./index.css">
 </head>
 
 <body>
@@ -196,8 +33,8 @@
     >
       <p style="text-align: center;">Menu</p>
       <div class="menu_button_container">
-        <div class="button_add_task button menu_button" id="button_add_task" draggable="true">Add Task</div>
-        <div class="button_add_decision button menu_button" id="button_add_decision" draggable="true">Add Decision</div>
+        <div class="button_add_task button menu_button ele-draggable" id="button_add_task" draggable="true">Add Task</div>
+        <div class="button_add_decision button menu_button ele-draggable" id="button_add_decision" draggable="true">Add Decision</div>
         <button id="saveButton" class="button menu_button">Save</button>
         <button id="loadButton" class="button menu_button">Load</button>
       </div>
@@ -285,58 +122,39 @@
         jsPlumb.removeAllEndpoints(parentnode);
         $(parentnode).remove();
       });
-
-      // $(".button_add_task").click(function () {
-      //   addTask();
-      // });
-
       
-
-      $(".button_add_task").on("dragstart", ev => {
+      $(".ele-draggable").on("dragstart", (ev, ff) => {
+        const { originalEvent } = ev;
         offsetX = ev.offsetX;
         offsetY = ev.offsetY;
-        // console.log(offsetX, offsetY); // 开始拖拽时鼠标指针位于元素的坐标值
-        ev.originalEvent.dataTransfer.setData("text/plain", ev.target.id);
-      });
 
-      $(".button_add_decision").on("dragstart", ev => {
-        console.log(ev.target.id)
-        offsetX = ev.offsetX;
-        offsetY = ev.offsetY;
-        // console.log(offsetX, offsetY); // 开始拖拽时鼠标指针位于元素的坐标值
-        console.log(ev.target.id)
-        ev.originalEvent.dataTransfer.setData("text/plain", ev.target.id);
+        originalEvent.dataTransfer.setData("text/plain", ev.target.id); // e.g. button_add_task
       });
 
       $("#drawingArea").on("dragover", ev => {
-        
         ev.preventDefault();
       });
 
       $("#drawingArea").on("drop", ev => {
-        console.log(ev)
-        var posX = ev.pageX - offsetX;
+        const { originalEvent } = ev;
+        var posX = ev.pageX - offsetX; // 需要减去鼠标的偏移值
         var posY = ev.pageY - offsetY;
-        offsetX = 0;
-        offsetY = 0;
-        console.log(posX, posY)
-        // console.log(posX, posY);
-        if (!ev.originalEvent.dataTransfer) return;
+        // console.log(posX, posY)
 
-        var data = ev.originalEvent.dataTransfer.getData("text");
+        // console.log(originalEvent.dataTransfer);
+        
+        if (!originalEvent.dataTransfer) return; // 连线时会触发 drop 事件，值为 undfined
+
+        var data = originalEvent.dataTransfer.getData("text");
         switch (data) {
           case "button_add_task":
-            addTask(undefined, {posX, posY});
+            addTask({posX, posY});
             break;
           case "button_add_decision":
-            addDecision(undefined, {posX, posY});
+            addDecision({posX, posY});
             break;
         }
       });
-
-      // $(".button_add_decision").click(function () {
-      //   addDecision();
-      // });
 
       $("#saveButton").click(function () {
         saveFlowchart();
@@ -347,15 +165,13 @@
       });
     });
 
-    function addTask(id, pos) {
-      let posX = pos ? pos.posX : 0;
-      let posY = pos ? pos.posY : 0;
+    function addTask({id, posX = 0, posY = 0}) {
+      // console.warn(id);
 
-      console.warn(id);
       if (typeof id === "undefined") {
         numberOfElements++;
         id = "taskcontainer" + numberOfElements;
-        console.log(id);
+        // console.log(id);
       }
 
       $(`
@@ -401,9 +217,7 @@
       return id;
     }
 
-    function addDecision(id, pos) {
-      let posX = pos ? pos.posX : 0;
-      let posY = pos ? pos.posY : 0;
+    function addDecision({id, posX = 0, posY = 0}) {
       
       if (typeof id === "undefined") {
         numberOfElements++;
@@ -492,14 +306,12 @@
       flowChart.numberOfElements = numberOfElements;
 
       var flowChartJson = JSON.stringify(flowChart);
-      //console.log(flowChartJson);
+      // console.log(flowChartJson);
 
       $("#jsonOutput").val(flowChartJson);
     }
 
     function loadFlowchart() {
-      // console.warn(jsPlumb);
-      // jsPlumb.empty($("#drawingArea")[0]);
       var flowChartJson = $("#jsonOutput").val();
       var flowChart = JSON.parse(flowChartJson);
       var nodes = flowChart.nodes;
@@ -509,11 +321,11 @@
         } else if (elem.nodetype === "endpoint") {
           repositionElement("endpoint", elem.positionX, elem.positionY);
         } else if (elem.nodetype === "task") {
-          var id = addTask(elem.blockId);
-          console.error(id);
+          var id = addTask({id: elem.blockId});
+          // console.error(id);
           repositionElement(id, elem.positionX, elem.positionY);
         } else if (elem.nodetype === "decision") {
-          var id = addDecision(elem.blockId);
+          var id = addDecision({id: elem.blockId});
           repositionElement(id, elem.positionX, elem.positionY);
         } else {
 
