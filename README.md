@@ -1,4 +1,8 @@
-# jsPlumb
+# jsPlumb Learning Notes
+
+## Thanks
+
+jsPlumb Learning Notes. Special Thanks To Stack Overflow user hbit.
 
 ## jQuery
 
