@@ -112,3 +112,74 @@ $.each(connections, function( index, elem ) {
 ![](./images/Snipaste_2019-03-17_06-17-56.png)
 
 <http://jsplumb.github.io/jsplumb/connectors.html>
+
+## getUuid | getUuids
+
+```js
+jsPlumb.bind("connection", function (conn, originalEvent) {
+  console.log(conn.targetEndpoint.getUuid());
+});
+```
+
+```js
+const endpoint = jsPlumb.addEndpoint(
+  $("#" + id),
+  {
+    uuid: id + "lt-in",
+    isTarget: true,
+    anchor: [0, 0.2]
+  }
+);
+
+console.log(endpoint.getUuid());
+```
+
+```js
+$.each(jsPlumb.getConnections(), function (idx, connection) {
+  // console.log(connection.getUuids()); // ["decisioncontainer1rm-out", "decisioncontainer2lm-in"]
+
+  connections.push({
+    // connectionId: connection.id,
+    sourceId: connection.sourceId,
+    targetId: connection.targetId,
+    uuids: connection.getUuids(), // getUuids
+    anchors: $.map(connection.endpoints, function(endpoint) {
+      console.error(endpoint.getUuid());
+      // console.log(endpoint)
+
+      return [
+        [
+          endpoint.anchor.x, 
+          endpoint.anchor.y, 
+          // endpoint.anchor.orientation[0], 
+          // endpoint.anchor.orientation[1],
+          // endpoint.anchor.offsets[0],
+          // endpoint.anchor.offsets[1]
+        ]
+      ];
+
+    })
+  });
+});
+```
+
+### 使用 uuid 回显
+
+![](./images/回显.gif)
+
+```js
+$.each(connections, function (index, elem) {
+  console.log(elem)
+  // jsPlumb.connect({
+  //   source: elem.sourceId,
+  //   target: elem.targetId,
+  //   anchors: elem.anchors
+  // });
+
+  jsPlumb.connect({
+    uuids: elem.uuids
+  });
+});
+```
+
+<https://community.jsplumbtoolkit.com/apidocs/classes/Endpoint.html#method_getUuid>

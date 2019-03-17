@@ -46,7 +46,7 @@
     id="jsonOutput"
     style="width:100%; height:140px;"
   >
-    {"nodes":[{"blockId":"taskcontainer1","nodetype":"task","positionX":267,"positionY":100},{"blockId":"taskcontainer2","nodetype":"task","positionX":519,"positionY":123},{"blockId":"taskcontainer3","nodetype":"task","positionX":163,"positionY":404},{"blockId":"decisioncontainer4","nodetype":"decision","positionX":1286,"positionY":284},{"blockId":"decisioncontainer5","nodetype":"decision","positionX":522,"positionY":390},{"blockId":"taskcontainer6","nodetype":"task","positionX":953,"positionY":283}],"connections":[{"sourceId":"taskcontainer2","targetId":"taskcontainer6","uuids":["taskcontainer2rm-out","taskcontainer6lm-in"],"anchors":[[1,0.5],[0,0.5]]},{"sourceId":"decisioncontainer5","targetId":"taskcontainer6","uuids":["decisioncontainer5rm-out","taskcontainer6lb-in"],"anchors":[[1,0.5],[0,0.8]]},{"sourceId":"taskcontainer3","targetId":"decisioncontainer5","uuids":["taskcontainer3rm-out","decisioncontainer5lm-in"],"anchors":[[1,0.5],[0,0.5]]},{"sourceId":"taskcontainer1","targetId":"taskcontainer2","uuids":["taskcontainer1rm-out","taskcontainer2lt-in"],"anchors":[[1,0.5],[0,0.2]]},{"sourceId":"taskcontainer6","targetId":"decisioncontainer4","uuids":["taskcontainer6rm-out","decisioncontainer4lm-in"],"anchors":[[1,0.5],[0,0.5]]}],"numberOfElements":6}
+    {"nodes":[{"blockId":"taskcontainer1","nodetype":"task","positionX":607,"positionY":151},{"blockId":"taskcontainer2","nodetype":"task","positionX":605,"positionY":486},{"blockId":"decisioncontainer3","nodetype":"decision","positionX":287,"positionY":151},{"blockId":"decisioncontainer4","nodetype":"decision","positionX":302,"positionY":537},{"blockId":"decisioncontainer5","nodetype":"decision","positionX":1495,"positionY":305},{"blockId":"taskcontainer6","nodetype":"task","positionX":1036,"positionY":303}],"connections":[{"sourceId":"decisioncontainer3","targetId":"taskcontainer1","anchors":[[1,0.5],[0,0.5]]},{"sourceId":"decisioncontainer4","targetId":"taskcontainer2","anchors":[[1,0.5],[0,0.2]]},{"sourceId":"taskcontainer1","targetId":"taskcontainer6","anchors":[[1,0.5],[0,0.2]]},{"sourceId":"taskcontainer2","targetId":"taskcontainer6","anchors":[[1,0.5],[0,0.8]]},{"sourceId":"taskcontainer6","targetId":"decisioncontainer5","anchors":[[1,0.5],[0,0.5]]}],"numberOfElements":6}
   </textarea>
 
   <script src="https://cdn.bootcss.com/jquery/2.2.1/jquery.js"></script>
@@ -97,9 +97,9 @@
         ]
       });
 
-        jsPlumb.bind("connection", function (conn, originalEvent) {
-          console.log(conn.targetEndpoint.getUuid());
-        });
+      jsPlumb.bind("connection", function (conn, originalEvent) {
+        console.log(conn.targetEndpoint.getUuid());
+      })
 
       // 不能自己连自己
       jsPlumb.bind("beforeDrop", function ({ sourceId, targetId }, originalEvent) {
@@ -313,13 +313,11 @@
       var connections = [];
 
       $.each(jsPlumb.getConnections(), function (idx, connection) {
-        // console.log(connection.getUuids()); // ["decisioncontainer1rm-out", "decisioncontainer2lm-in"]
-
-        connections.push({
+        console.log(connection.getUuids()); // ["decisioncontainer1rm-out", "decisioncontainer2lm-in"]
+          connections.push({
           // connectionId: connection.id,
           sourceId: connection.sourceId,
           targetId: connection.targetId,
-          uuids: connection.getUuids(),
           anchors: $.map(connection.endpoints, function(endpoint) {
             console.error(endpoint.getUuid());
             // console.log(endpoint)
@@ -378,15 +376,11 @@
 
       $.each(connections, function (index, elem) {
         console.log(elem)
-        // jsPlumb.connect({
-        //   source: elem.sourceId,
-        //   target: elem.targetId,
-        //   anchors: elem.anchors
-        // });
-
         jsPlumb.connect({
-          uuids: elem.uuids
-        })
+          source: elem.sourceId,
+          target: elem.targetId,
+          anchors: elem.anchors
+        });
       });
 
       numberOfElements = flowChart.numberOfElements;
