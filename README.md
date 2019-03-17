@@ -468,7 +468,7 @@ $.each(connections, function (index, elem) {
         jsPlumb.removeAllEndpoints(parentnode);
         $(parentnode).remove();
       });
-      
+
       $(".ele-draggable").on("dragstart", (ev, ff) => {
         const { originalEvent, target } = ev;
         offsetX = ev.offsetX;
@@ -485,7 +485,7 @@ $.each(connections, function (index, elem) {
         const { originalEvent } = ev;
         var posX = ev.pageX - offsetX; // 需要减去鼠标的偏移值
         var posY = ev.pageY - offsetY;
-        
+
         if (!originalEvent.dataTransfer) return; // 连线时会触发 drop 事件，值为 undfined
 
         var data = originalEvent.dataTransfer.getData("text");
@@ -640,7 +640,7 @@ $.each(connections, function (index, elem) {
           anchor: "Right"
         }
       );
-      
+
     }
 
     function saveFlowchart() {
@@ -748,3 +748,9 @@ $.each(connections, function (index, elem) {
 
 </html>
 ```
+
+References:
+
+<http://jsfiddle.net/t3nbL/1/>
+
+<https://stackoverflow.com/questions/20620719/save-and-load-jsplumb-flowchart-including-exact-anchors-and-connections>
