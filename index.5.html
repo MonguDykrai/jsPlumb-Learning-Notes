@@ -71,7 +71,7 @@
       width: 80px;
     }
 
-    .decision .ctrl_container {
+    .decision .ctrl-container {
       display: table-cell;
       height: 80px;
       padding: 0 10px;
@@ -91,11 +91,11 @@
       cursor: pointer;
     }
 
-    .menu_button {
+    .menu-button {
       padding: 5px;
     }
 
-    .menu_button:hover {
+    .menu-button:hover {
       background-color: #AAAAAA;
       color: black;
     }
@@ -116,7 +116,7 @@
       color: black;
     }
 
-    .button_remove {
+    .button-remove {
       font-size: 9pt;
       color: darkgrey;
       border-radius: 30%;
@@ -127,39 +127,39 @@
       text-align: center;
     }
 
-    .task .button_remove {
+    .task .button-remove {
       float: right;
     }
 
-    .decision .button_remove {
+    .decision .button-remove {
       margin: auto auto;
     }
 
-    .button_remove:hover {
+    .button-remove:hover {
       background-color: darkred;
       color: white;
     }
 
-    .menu_button_container {
+    .menu-button-container {
       margin: 5px;
     }
 
-    .ctrl_container {
+    .ctrl-container {
       margin: 5px;
       height: 40px;
     }
 
-    .details_container {
+    .details-container {
       margin: 5px;
       min-height: 40px;
     }
 
-    .detail_label {
+    .detail-label {
       font-size: 9pt;
       color: grey;
     }
 
-    .detail_text {
+    .detail-text {
       width: 80px;
       font-size: 10pt;
     }
@@ -174,7 +174,7 @@
 
 <body>
   <div 
-    id="drawingArea"
+    id="canvas"
     style="width:100%; min-height:500px;"
   >
 
@@ -195,11 +195,11 @@
       style="left: 600px;"
     >
       <p style="text-align: center;">Menu</p>
-      <div class="menu_button_container">
-        <div class="button_add_task button menu_button" id="button_add_task" draggable="true">Add Task</div>
-        <div class="button_add_decision button menu_button" id="button_add_decision" draggable="true">Add Decision</div>
-        <button id="saveButton" class="button menu_button">Save</button>
-        <button id="loadButton" class="button menu_button">Load</button>
+      <div class="menu-button-container">
+        <div class="button-add-task button menu-button" id="button-add-task" draggable="true">Add Task</div>
+        <div class="button-add-decision button menu-button" id="button-add-decision" draggable="true">Add Decision</div>
+        <button id="saveButton" class="button menu-button">Save</button>
+        <button id="loadButton" class="button menu-button">Load</button>
       </div>
     </div>
 
@@ -232,7 +232,7 @@
     var offsetX = 0;
     var offsetY = 0; // 开始拖拽时鼠标指针位于元素的坐标值
     var numberOfElements = 0;
-    var htmlBase = "drawingArea";
+    var htmlBase = "canvas";
 
     jsPlumb.ready(function () {
 
@@ -279,27 +279,27 @@
         workflowConnectorEndpoint
       );
 
-      $("#" + htmlBase).on("click", ".button_remove", function () {
+      $("#" + htmlBase).on("click", ".button-remove", function () {
         var parentnode = $(this)[0].parentNode.parentNode;
         jsPlumb.detachAllConnections(parentnode);
         jsPlumb.removeAllEndpoints(parentnode);
         $(parentnode).remove();
       });
 
-      // $(".button_add_task").click(function () {
+      // $(".button-add-task").click(function () {
       //   addTask();
       // });
 
       
 
-      $(".button_add_task").on("dragstart", ev => {
+      $(".button-add-task").on("dragstart", ev => {
         offsetX = ev.offsetX;
         offsetY = ev.offsetY;
         // console.log(offsetX, offsetY); // 开始拖拽时鼠标指针位于元素的坐标值
         ev.originalEvent.dataTransfer.setData("text/plain", ev.target.id);
       });
 
-      $(".button_add_decision").on("dragstart", ev => {
+      $(".button-add-decision").on("dragstart", ev => {
         console.log(ev.target.id)
         offsetX = ev.offsetX;
         offsetY = ev.offsetY;
@@ -308,12 +308,12 @@
         ev.originalEvent.dataTransfer.setData("text/plain", ev.target.id);
       });
 
-      $("#drawingArea").on("dragover", ev => {
+      $("#canvas").on("dragover", ev => {
         
         ev.preventDefault();
       });
 
-      $("#drawingArea").on("drop", ev => {
+      $("#canvas").on("drop", ev => {
         console.log(ev)
         var posX = ev.pageX - offsetX;
         var posY = ev.pageY - offsetY;
@@ -325,16 +325,16 @@
 
         var data = ev.originalEvent.dataTransfer.getData("text");
         switch (data) {
-          case "button_add_task":
+          case "button-add-task":
             addTask(undefined, {posX, posY});
             break;
-          case "button_add_decision":
+          case "button-add-decision":
             addDecision(undefined, {posX, posY});
             break;
         }
       });
 
-      // $(".button_add_decision").click(function () {
+      // $(".button-add-decision").click(function () {
       //   addDecision();
       // });
 
@@ -360,12 +360,12 @@
 
       $(`
         <div class="window task node" id="${id}" data-nodetype="task" style="left: ${posX}px; top: ${posY}px;">
-          <div class="ctrl_container">
-            <div class="button_remove">x</div>
+          <div class="ctrl-container">
+            <div class="button-remove">x</div>
           </div>
-          <div class="details_container">
-            <label class="detail_label">Name</label>
-            <input class="detail_text" value="" />
+          <div class="details-container">
+            <label class="detail-label">Name</label>
+            <input class="detail-text" />
           </div>
         </div>
       `)
@@ -412,8 +412,8 @@
 
       $(`
         <div class="window decision node" id="${id}" data-nodetype="decision" style="left: ${posX}px; top: ${posY}px;">
-          <div class="ctrl_container">
-            <div class="button_remove">x</div>
+          <div class="ctrl-container">
+            <div class="button-remove">x</div>
           </div>
         </div>
       `)
@@ -499,7 +499,7 @@
 
     function loadFlowchart() {
       // console.warn(jsPlumb);
-      // jsPlumb.empty($("#drawingArea")[0]);
+      // jsPlumb.empty($("#canvas")[0]);
       var flowChartJson = $("#jsonOutput").val();
       var flowChart = JSON.parse(flowChartJson);
       var nodes = flowChart.nodes;

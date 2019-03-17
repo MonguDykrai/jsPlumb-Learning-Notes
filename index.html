@@ -5,8 +5,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>jsPlumb Flowchart</title>
   <link rel="stylesheet" href="./index.css">
+  <style>
+    .reset-button {
+      float: right;
+      margin-bottom: 10px;
+      background: rgba(0, 169, 200, 1);
+    }
+
+    #canvas {
+      margin-bottom: 6px;
+      width:100%;
+      min-height:700px;
+      background: #d6d6d6;
+    }
+  </style>
 </head>
 
 <body>
@@ -17,18 +31,17 @@
     style="left: 20px;"
   >
     <p style="text-align: center;">Menu</p>
-    <div class="menu_button_container">
-      <div class="button_add_task button menu_button ele-draggable" id="button_add_task" draggable="true">Add Task</div>
-      <div class="button_add_decision button menu_button ele-draggable" id="button_add_decision" draggable="true">Add Decision</div>
+    <div class="menu-button-container">
+      <div class="button-add-task button menu-button ele-draggable" id="buttonAddTask" draggable="true">Add Task</div>
+      <div class="button-add-decision button menu-button ele-draggable" id="buttonAddDecision" draggable="true">Add Decision</div>
       <div>
-        <button id="saveButton" class="button menu_button">Save</button>
-        <button id="loadButton" class="button menu_button" style="float: right;">Load</button>
+        <button id="saveButton" class="button menu-button">Save</button>
+        <button id="loadButton" class="button menu-button" style="float: right;">Load</button>
       </div>
       <div>
           <button
             id="resetButton"
-            class="button menu_button"
-            style="background: rgba(0, 169, 200, 1); float: right; margin-bottom: 10px;"
+            class="button menu-button reset-button"
           >
             Reset
           </button>
@@ -37,8 +50,7 @@
   </div>
 
   <div 
-    id="drawingArea"
-    style="width:100%; min-height:700px; background: #d6d6d6; margin-bottom: 6px;"
+    id="canvas"
   >
   </div>
 
@@ -46,21 +58,21 @@
     id="jsonOutput"
     style="width:100%; height:140px;"
   >
-   {"nodes":[{"blockId":"taskcontainer1","nodetype":"task","positionX":441,"positionY":207},{"blockId":"decisioncontainer4","nodetype":"decision","positionX":1413,"positionY":361},{"blockId":"taskcontainer5","nodetype":"task","positionX":482,"positionY":520},{"blockId":"taskcontainer6","nodetype":"task","positionX":923,"positionY":365},{"blockId":"taskcontainer7","nodetype":"task","positionX":674,"positionY":86},{"blockId":"taskcontainer8","nodetype":"task","positionX":60,"positionY":454}],"connections":[{"sourceId":"taskcontainer6","targetId":"decisioncontainer4","uuids":["taskcontainer6rm-out","decisioncontainer4lm-in"],"anchors":[[1,0.5],[0,0.5]]},{"sourceId":"taskcontainer5","targetId":"taskcontainer6","uuids":["taskcontainer5rm-out","taskcontainer6lb-in"],"anchors":[[1,0.5],[0,0.8]]},{"sourceId":"taskcontainer1","targetId":"taskcontainer6","uuids":["taskcontainer1rm-out","taskcontainer6lt-in"],"anchors":[[1,0.5],[0,0.2]]},{"sourceId":"taskcontainer7","targetId":"taskcontainer6","uuids":["taskcontainer7rm-out","taskcontainer6tm-in"],"anchors":[[1,0.5],[0.5,0]]},{"sourceId":"taskcontainer8","targetId":"taskcontainer5","uuids":["taskcontainer8rm-out","taskcontainer5lm-in"],"anchors":[[1,0.5],[0,0.5]]}],"numberOfElements":8}
+    {"nodes":[{"blockId":"decisioncontainer4","nodetype":"decision","positionX":1413,"positionY":361},{"blockId":"taskcontainer7","nodetype":"task","positionX":723,"positionY":241},{"blockId":"taskcontainer8","nodetype":"task","positionX":60,"positionY":454},{"blockId":"taskcontainer9","nodetype":"task","positionX":231,"positionY":94},{"blockId":"taskcontainer11","nodetype":"task","positionX":538,"positionY":79},{"blockId":"taskcontainer13","nodetype":"decision","positionX":415,"positionY":441},{"blockId":"taskcontainer14","nodetype":"task","positionX":667,"positionY":514},{"blockId":"taskcontainer15","nodetype":"decision","positionX":249,"positionY":583},{"blockId":"taskcontainer16","nodetype":"task","positionX":1109,"positionY":500},{"blockId":"taskcontainer17","nodetype":"decision","positionX":902,"positionY":586}],"connections":[{"uuids":["taskcontainer9rm-out","taskcontainer7lt-in"]},{"uuids":["taskcontainer8rm-out","taskcontainer7lb-in"]},{"uuids":["taskcontainer11rm-out","taskcontainer7tm-in"]},{"uuids":["taskcontainer13rm-out","taskcontainer14lt-in"]},{"uuids":["taskcontainer15rm-out","taskcontainer14lb-in"]},{"uuids":["taskcontainer7rm-out","taskcontainer16lt-in"]},{"uuids":["taskcontainer14rm-out","taskcontainer16lm-in"]},{"uuids":["taskcontainer16rm-out","decisioncontainer4lm-in"]},{"uuids":["taskcontainer17rm-out","taskcontainer16lb-in"]}],"numberOfElements":17}
   </textarea>
 
   <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
   <script src="https://cdn.bootcss.com/jsPlumb/2.9.0/js/jsplumb.js"></script>
 
   <script>
-    let offsetX = 0;
-    let offsetY = 0;
-    let numberOfElements = 0;
-    const canvasId = "#drawingArea";
+    const globalState = {
+      offsetX: 0,
+      offsetY: 0,
+      numberOfElements: 0,
+      canvasId: "#canvas"
+    };
 
     jsPlumb.ready(() => {
-
-      jsPlumb.draggable(".window");
 
       jsPlumb.importDefaults({
         MaxConnections: 1,
@@ -91,55 +103,6 @@
         ]
       });
 
-      jsPlumb.bind("beforeDrop", ({ sourceId, targetId }, originalEvent) => {
-        if (sourceId == targetId) {
-          return false;
-        }
-
-        return true;
-      });
-
-      $("#resetButton").on("click", () => {
-        jsPlumb.empty("drawingArea");
-      });
-
-      $(canvasId).on("click", ".button_remove", function () {
-        const parentnode = $(this)[0].parentNode.parentNode;
-        jsPlumb.deleteConnectionsForElement(parentnode);
-        jsPlumb.removeAllEndpoints(parentnode);
-        $(parentnode).remove();
-      });
-      
-      $(".ele-draggable").on("dragstart", (ev, ff) => {
-        const { originalEvent, target } = ev;
-        offsetX = ev.offsetX;
-        offsetY = ev.offsetY;
-
-        originalEvent.dataTransfer.setData("text", target.id); // e.g. button_add_task
-      });
-
-      $(canvasId).on("dragover", ev => {
-        ev.preventDefault();
-      });
-
-      $(canvasId).on("drop", ev => {
-        const { originalEvent } = ev;
-        const posX = ev.pageX - offsetX; // 需要减去鼠标的偏移值
-        const posY = ev.pageY - offsetY;
-        
-        if (!originalEvent.dataTransfer) return; // 连线时会触发 drop 事件，值为 undfined
-
-        const data = originalEvent.dataTransfer.getData("text");
-
-        if (data == "button_add_task") {
-          addNode({ posX, posY, scenario: "task" });
-        }
-
-        if (data == "button_add_decision") {
-          addNode({ posX, posY, scenario: "decision" });
-        }
-      });
-
       $("#saveButton").click(() => {
         saveFlowchart();
       });
@@ -147,33 +110,82 @@
       $("#loadButton").click(() => {
         loadFlowchart();
       });
+
+      $("#resetButton").on("click", () => {
+        jsPlumb.empty("canvas");
+      });
+
+      $(globalState.canvasId).on("click", ".button-remove", function () {
+        const parentnode = $(this)[0].parentNode.parentNode;
+        jsPlumb.deleteConnectionsForElement(parentnode);
+        jsPlumb.removeAllEndpoints(parentnode);
+        $(parentnode).remove();
+      });
+
+      jsPlumb.bind("beforeDrop", ({ sourceId, targetId }, originalEvent) => {
+        if (sourceId == targetId) {
+          return false;
+        }
+
+        return true;
+      });
+      
+      $(".ele-draggable").on("dragstart", (ev, ff) => {
+        const { originalEvent, target } = ev;
+        globalState.offsetX = ev.offsetX;
+        globalState.offsetY = ev.offsetY;
+
+        originalEvent.dataTransfer.setData("text", target.id); // e.g. buttonAddTask
+      });
+
+      $(globalState.canvasId).on("dragover", ev => {
+        ev.preventDefault();
+      });
+
+      $(globalState.canvasId).on("drop", ev => {
+        const { originalEvent } = ev;
+        const posX = ev.pageX - globalState.offsetX; // 需要减去鼠标的偏移值
+        const posY = ev.pageY - globalState.offsetY;
+        
+        if (!originalEvent.dataTransfer) return; // 连线时会触发 drop 事件，值为 undfined
+
+        const data = originalEvent.dataTransfer.getData("text");
+
+        if (data == "buttonAddTask") {
+          addNode({ posX, posY, scenario: "task" });
+        }
+
+        if (data == "buttonAddDecision") {
+          addNode({ posX, posY, scenario: "decision" });
+        }
+      });
     });
 
     function addNode({ id, posX, posY, scenario }) {
       if (typeof id == "undefined") {
-        numberOfElements++;
-        id = "taskcontainer" + numberOfElements;
+        globalState.numberOfElements++;
+        id = "taskcontainer" + globalState.numberOfElements;
       }
 
       const taskNode = `
         <div class="window task node" id="${id}" data-nodetype="task" style="left: ${posX}px; top: ${posY}px;">
-          <div class="ctrl_container">
-            <div class="button_remove">x</div>
+          <div class="ctrl-container">
+            <div class="button-remove">x</div>
           </div>
-          <div class="details_container">
-            <label class="detail_label">Name</label>
-            <input class="detail_text" value="" />
+          <div class="details-container">
+            <label class="detail-label">Name</label>
+            <input class="detail-text" />
           </div>
         </div>
       `;
 
       const decisionNode = `
         <div class="window decision node" id="${id}" data-nodetype="decision" style="left: ${posX}px; top: ${posY}px;">
-          <div class="ctrl_container" style="margin-top: -10px;">
-            <div class="button_remove">x</div>
+          <div class="ctrl-container" style="margin-top: -10px;">
+            <div class="button-remove">x</div>
           </div>
           <div
-            class="details_container"
+            class="details-container"
             style="margin: -20px 0 0 6px; min-height: 20px; font-size: 12px; text-align: center;"
           >
             <span>Decision</span>
@@ -182,11 +194,11 @@
       `;
 
       if (scenario == "task") {
-        $(taskNode).appendTo(canvasId);
+        $(taskNode).appendTo(globalState.canvasId);
       }
 
       if (scenario == "decision") {
-        $(decisionNode).appendTo(canvasId);
+        $(decisionNode).appendTo(globalState.canvasId);
       }
 
       addEndpoint({ id, scenario });
@@ -288,7 +300,7 @@
       const flowChart = {};
       flowChart.nodes = nodes;
       flowChart.connections = connections;
-      flowChart.numberOfElements = numberOfElements;
+      flowChart.numberOfElements = globalState.numberOfElements;
       const flowChartJson = JSON.stringify(flowChart);
 
       $("#jsonOutput").val(flowChartJson);
@@ -323,7 +335,7 @@
         })
       });
 
-      numberOfElements = flowChart.numberOfElements;
+      globalState.numberOfElements = flowChart.numberOfElements;
     }
 
     function repositionElement({ id, posX, posY }) {

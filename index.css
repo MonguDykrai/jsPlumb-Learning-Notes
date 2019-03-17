@@ -63,7 +63,7 @@
   width: 80px;
 }
 
-.decision .ctrl_container {
+.decision .ctrl-container {
   display: table-cell;
   height: 80px;
   padding: 0 10px;
@@ -83,11 +83,11 @@
   cursor: pointer;
 }
 
-.menu_button {
+.menu-button {
   padding: 5px;
 }
 
-.menu_button:hover {
+.menu-button:hover {
   background-color: #AAAAAA;
   color: black;
 }
@@ -108,7 +108,7 @@
   color: black;
 }
 
-.button_remove {
+.button-remove {
   font-size: 9pt;
   color: darkgrey;
   border-radius: 30%;
@@ -119,39 +119,39 @@
   text-align: center;
 }
 
-.task .button_remove {
+.task .button-remove {
   float: right;
 }
 
-.decision .button_remove {
+.decision .button-remove {
   margin: auto auto;
 }
 
-.button_remove:hover {
+.button-remove:hover {
   background-color: darkred;
   color: white;
 }
 
-.menu_button_container {
+.menu-button-container {
   margin: 5px;
 }
 
-.ctrl_container {
+.ctrl-container {
   margin: 5px;
   height: 40px;
 }
 
-.details_container {
+.details-container {
   margin: 5px;
   min-height: 40px;
 }
 
-.detail_label {
+.detail-label {
   font-size: 9pt;
   color: grey;
 }
 
-.detail_text {
+.detail-text {
   width: 80px;
   font-size: 10pt;
 }

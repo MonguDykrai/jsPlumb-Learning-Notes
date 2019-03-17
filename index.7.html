@@ -11,7 +11,7 @@
 
 <body>
   <div 
-    id="drawingArea"
+    id="canvas"
     style="width:100%; min-height:500px;"
   >
 
@@ -32,11 +32,11 @@
       style="left: 600px;"
     >
       <p style="text-align: center;">Menu</p>
-      <div class="menu_button_container">
-        <div class="button_add_task button menu_button ele-draggable" id="button_add_task" draggable="true">Add Task</div>
-        <!-- <div class="button_add_decision button menu_button ele-draggable" id="button_add_decision" draggable="true">Add Decision</div> -->
-        <button id="saveButton" class="button menu_button">Save</button>
-        <button id="loadButton" class="button menu_button">Load</button>
+      <div class="menu-button-container">
+        <div class="button-add-task button menu-button ele-draggable" id="button-add-task" draggable="true">Add Task</div>
+        <!-- <div class="button-add-decision button menu-button ele-draggable" id="button-add-decision" draggable="true">Add Decision</div> -->
+        <button id="saveButton" class="button menu-button">Save</button>
+        <button id="loadButton" class="button menu-button">Load</button>
       </div>
     </div>
 
@@ -69,7 +69,7 @@
     var offsetX = 0;
     var offsetY = 0; // 开始拖拽时鼠标指针位于元素的坐标值
     var numberOfElements = 0;
-    var htmlBase = "drawingArea";
+    var htmlBase = "canvas";
 
     jsPlumb.ready(function () {
 
@@ -132,7 +132,7 @@
         }
       );
 
-      $("#" + htmlBase).on("click", ".button_remove", function () {
+      $("#" + htmlBase).on("click", ".button-remove", function () {
         var parentnode = $(this)[0].parentNode.parentNode;
         jsPlumb.detachAllConnections(parentnode);
         jsPlumb.removeAllEndpoints(parentnode);
@@ -144,14 +144,14 @@
         offsetX = ev.offsetX;
         offsetY = ev.offsetY;
 
-        originalEvent.dataTransfer.setData("text/plain", ev.target.id); // e.g. button_add_task
+        originalEvent.dataTransfer.setData("text/plain", ev.target.id); // e.g. button-add-task
       });
 
-      $("#drawingArea").on("dragover", ev => {
+      $("#canvas").on("dragover", ev => {
         ev.preventDefault();
       });
 
-      $("#drawingArea").on("drop", ev => {
+      $("#canvas").on("drop", ev => {
         const { originalEvent } = ev;
         var posX = ev.pageX - offsetX; // 需要减去鼠标的偏移值
         var posY = ev.pageY - offsetY;
@@ -163,10 +163,10 @@
 
         var data = originalEvent.dataTransfer.getData("text");
         switch (data) {
-          case "button_add_task":
+          case "button-add-task":
             addTask({posX, posY});
             break;
-          // case "button_add_decision":
+          // case "button-add-decision":
           //   addDecision({posX, posY});
           //   break;
         }
@@ -192,12 +192,12 @@
 
       $(`
         <div class="window task node" id="${id}" data-nodetype="task" style="left: ${posX}px; top: ${posY}px;">
-          <div class="ctrl_container">
-            <div class="button_remove">x</div>
+          <div class="ctrl-container">
+            <div class="button-remove">x</div>
           </div>
-          <div class="details_container">
-            <label class="detail_label">Name</label>
-            <input class="detail_text" value="" />
+          <div class="details-container">
+            <label class="detail-label">Name</label>
+            <input class="detail-text" />
           </div>
         </div>
       `)
@@ -262,8 +262,8 @@
 
     //   $(`
     //     <div class="window decision node" id="${id}" data-nodetype="decision" style="left: ${posX}px; top: ${posY}px;">
-    //       <div class="ctrl_container">
-    //         <div class="button_remove">x</div>
+    //       <div class="ctrl-container">
+    //         <div class="button-remove">x</div>
     //       </div>
     //     </div>
     //   `)

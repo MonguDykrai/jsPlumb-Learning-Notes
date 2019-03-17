@@ -262,7 +262,7 @@ $.each(connections, function (index, elem) {
       width: 80px;
     }
 
-    .decision .ctrl_container {
+    .decision .ctrl-container {
       display: table-cell;
       height: 80px;
       padding: 0 10px;
@@ -282,11 +282,11 @@ $.each(connections, function (index, elem) {
       cursor: pointer;
     }
 
-    .menu_button {
+    .menu-button {
       padding: 5px;
     }
 
-    .menu_button:hover {
+    .menu-button:hover {
       background-color: #AAAAAA;
       color: black;
     }
@@ -307,7 +307,7 @@ $.each(connections, function (index, elem) {
       color: black;
     }
 
-    .button_remove {
+    .button-remove {
       font-size: 9pt;
       color: darkgrey;
       border-radius: 30%;
@@ -318,39 +318,39 @@ $.each(connections, function (index, elem) {
       text-align: center;
     }
 
-    .task .button_remove {
+    .task .button-remove {
       float: right;
     }
 
-    .decision .button_remove {
+    .decision .button-remove {
       margin: auto auto;
     }
 
-    .button_remove:hover {
+    .button-remove:hover {
       background-color: darkred;
       color: white;
     }
 
-    .menu_button_container {
+    .menu-button-container {
       margin: 5px;
     }
 
-    .ctrl_container {
+    .ctrl-container {
       margin: 5px;
       height: 40px;
     }
 
-    .details_container {
+    .details-container {
       margin: 5px;
       min-height: 40px;
     }
 
-    .detail_label {
+    .detail-label {
       font-size: 9pt;
       color: grey;
     }
 
-    .detail_text {
+    .detail-text {
       width: 80px;
       font-size: 10pt;
     }
@@ -370,17 +370,17 @@ $.each(connections, function (index, elem) {
     style="left: 20px;"
   >
     <p style="text-align: center;">Menu</p>
-    <div class="menu_button_container">
-      <div class="button_add_task button menu_button ele-draggable" id="button_add_task" draggable="true">Add Task</div>
-      <div class="button_add_decision button menu_button ele-draggable" id="button_add_decision" draggable="true">Add Decision</div>
+    <div class="menu-button-container">
+      <div class="button-add-task button menu-button ele-draggable" id="button-add-task" draggable="true">Add Task</div>
+      <div class="button-add-decision button menu-button ele-draggable" id="button-add-decision" draggable="true">Add Decision</div>
       <div>
-        <button id="saveButton" class="button menu_button">Save</button>
-        <button id="loadButton" class="button menu_button" style="float: right;">Load</button>
+        <button id="saveButton" class="button menu-button">Save</button>
+        <button id="loadButton" class="button menu-button" style="float: right;">Load</button>
       </div>
       <div>
           <button
             id="resetButton"
-            class="button menu_button"
+            class="button menu-button"
             style="background: rgba(0, 169, 200, 1); float: right; margin-bottom: 10px;"
           >
             Reset
@@ -390,7 +390,7 @@ $.each(connections, function (index, elem) {
   </div>
 
   <div 
-    id="drawingArea"
+    id="canvas"
     style="width:100%; min-height:700px; background: #d6d6d6; margin-bottom: 6px;"
   >
   </div>
@@ -409,7 +409,7 @@ $.each(connections, function (index, elem) {
     var offsetX = 0;
     var offsetY = 0; // 开始拖拽时鼠标指针位于元素的坐标值
     var numberOfElements = 0;
-    var htmlBase = "drawingArea";
+    var htmlBase = "canvas";
 
     jsPlumb.ready(function () {
 
@@ -459,10 +459,10 @@ $.each(connections, function (index, elem) {
       });
 
       $("#resetButton").on("click", function () {
-        jsPlumb.empty("drawingArea");
+        jsPlumb.empty("canvas");
       });
 
-      $("#" + htmlBase).on("click", ".button_remove", function () {
+      $("#" + htmlBase).on("click", ".button-remove", function () {
         var parentnode = $(this)[0].parentNode.parentNode;
         jsPlumb.deleteConnectionsForElement(parentnode);
         jsPlumb.removeAllEndpoints(parentnode);
@@ -474,14 +474,14 @@ $.each(connections, function (index, elem) {
         offsetX = ev.offsetX;
         offsetY = ev.offsetY;
 
-        originalEvent.dataTransfer.setData("text", target.id); // e.g. button_add_task
+        originalEvent.dataTransfer.setData("text", target.id); // e.g. button-add-task
       });
 
-      $("#drawingArea").on("dragover", ev => {
+      $("#canvas").on("dragover", ev => {
         ev.preventDefault();
       });
 
-      $("#drawingArea").on("drop", ev => {
+      $("#canvas").on("drop", ev => {
         const { originalEvent } = ev;
         var posX = ev.pageX - offsetX; // 需要减去鼠标的偏移值
         var posY = ev.pageY - offsetY;
@@ -490,11 +490,11 @@ $.each(connections, function (index, elem) {
 
         var data = originalEvent.dataTransfer.getData("text");
 
-        if (data == "button_add_task") {
+        if (data == "button-add-task") {
           addTask({ posX, posY });
         }
 
-        if (data == "button_add_decision") {
+        if (data == "button-add-decision") {
           addDecision({ posX, posY });
         }
       });
@@ -520,12 +520,12 @@ $.each(connections, function (index, elem) {
 
       $(`
         <div class="window task node" id="${id}" data-nodetype="task" style="left: ${posX}px; top: ${posY}px;">
-          <div class="ctrl_container">
-            <div class="button_remove">x</div>
+          <div class="ctrl-container">
+            <div class="button-remove">x</div>
           </div>
-          <div class="details_container">
-            <label class="detail_label">Name</label>
-            <input class="detail_text" value="" />
+          <div class="details-container">
+            <label class="detail-label">Name</label>
+            <input class="detail-text" />
           </div>
         </div>
       `)
@@ -550,11 +550,11 @@ $.each(connections, function (index, elem) {
 
       $(`
         <div class="window decision node" id="${id}" data-nodetype="decision" style="left: ${posX}px; top: ${posY}px;">
-          <div class="ctrl_container" style="margin-top: -10px;">
-            <div class="button_remove">x</div>
+          <div class="ctrl-container" style="margin-top: -10px;">
+            <div class="button-remove">x</div>
           </div>
           <div
-            class="details_container"
+            class="details-container"
             style="margin: -20px 0 0 6px; min-height: 20px; font-size: 12px; text-align: center;"
           >
             <span>Decision</span>
