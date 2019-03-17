@@ -53,14 +53,16 @@
   <script src="https://cdn.bootcss.com/jsPlumb/2.9.0/js/jsplumb.js"></script>
 
   <script>
-    let offsetX = 0;
-    let offsetY = 0;
-    let numberOfElements = 0;
-    const canvasId = "#drawingArea";
+    var offsetX = 0;
+    var offsetY = 0; // 开始拖拽时鼠标指针位于元素的坐标值
+    var numberOfElements = 0;
+    var htmlBase = "drawingArea";
 
     jsPlumb.ready(() => {
 
       jsPlumb.draggable(".window");
+
+      // console.log(jsPlumb.Defaults)
 
       jsPlumb.importDefaults({
         MaxConnections: 1,
@@ -75,6 +77,7 @@
           {
             gap: 10,
             midpoint: 0,
+            // alwaysRespectStubs: true,
             stub: 2,
             cornerRadius: 2
           }
@@ -91,6 +94,11 @@
         ]
       });
 
+      // jsPlumb.bind("connection", function (conn, originalEvent) {
+      //   console.log(conn.targetEndpoint.getUuid());
+      // });
+
+      // 不能自己连自己
       jsPlumb.bind("beforeDrop", ({ sourceId, targetId }, originalEvent) => {
         if (sourceId == targetId) {
           return false;
@@ -103,8 +111,8 @@
         jsPlumb.empty("drawingArea");
       });
 
-      $(canvasId).on("click", ".button_remove", function () {
-        const parentnode = $(this)[0].parentNode.parentNode;
+      $("#" + htmlBase).on("click", ".button_remove", function () {
+        var parentnode = $(this)[0].parentNode.parentNode;
         jsPlumb.deleteConnectionsForElement(parentnode);
         jsPlumb.removeAllEndpoints(parentnode);
         $(parentnode).remove();
@@ -118,24 +126,26 @@
         originalEvent.dataTransfer.setData("text", target.id); // e.g. button_add_task
       });
 
-      $(canvasId).on("dragover", ev => {
+      $("#drawingArea").on("dragover", ev => {
         ev.preventDefault();
       });
 
-      $(canvasId).on("drop", ev => {
+      $("#drawingArea").on("drop", ev => {
         const { originalEvent } = ev;
-        const posX = ev.pageX - offsetX; // 需要减去鼠标的偏移值
-        const posY = ev.pageY - offsetY;
+        var posX = ev.pageX - offsetX; // 需要减去鼠标的偏移值
+        var posY = ev.pageY - offsetY;
         
         if (!originalEvent.dataTransfer) return; // 连线时会触发 drop 事件，值为 undfined
 
-        const data = originalEvent.dataTransfer.getData("text");
+        var data = originalEvent.dataTransfer.getData("text");
 
         if (data == "button_add_task") {
+          // addTask({ posX, posY, scenario: "task" });
           addNode({ posX, posY, scenario: "task" });
         }
 
         if (data == "button_add_decision") {
+          // addDecision({ posX, posY, scenario: "decision" });
           addNode({ posX, posY, scenario: "decision" });
         }
       });
@@ -153,6 +163,7 @@
       if (typeof id == "undefined") {
         numberOfElements++;
         id = "taskcontainer" + numberOfElements;
+        // console.log(id);
       }
 
       const taskNode = `
@@ -182,11 +193,11 @@
       `;
 
       if (scenario == "task") {
-        $(taskNode).appendTo(canvasId);
+        $(taskNode).appendTo(`#${htmlBase}`);
       }
 
       if (scenario == "decision") {
-        $(decisionNode).appendTo(canvasId);
+        $(decisionNode).appendTo(`#${htmlBase}`);
       }
 
       addEndpoint({ id, scenario });
@@ -194,9 +205,102 @@
       jsPlumb.draggable(id);
     }
 
+    // function addTask({ id, posX, posY, scenario }) {
+    //   // const scenario = "task";
+    //   // console.warn(id);
+
+    //   if (typeof id == "undefined") {
+    //     numberOfElements++;
+    //     id = "taskcontainer" + numberOfElements;
+    //     // console.log(id);
+    //   }
+
+    //   const taskNode = `
+    //     <div class="window task node" id="${id}" data-nodetype="task" style="left: ${posX}px; top: ${posY}px;">
+    //       <div class="ctrl_container">
+    //         <div class="button_remove">x</div>
+    //       </div>
+    //       <div class="details_container">
+    //         <label class="detail_label">Name</label>
+    //         <input class="detail_text" value="" />
+    //       </div>
+    //     </div>
+    //   `;
+
+    //   $(taskNode).appendTo(`#${htmlBase}`);
+
+    //   // $(`
+    //   //   <div class="window task node" id="${id}" data-nodetype="task" style="left: ${posX}px; top: ${posY}px;">
+    //   //     <div class="ctrl_container">
+    //   //       <div class="button_remove">x</div>
+    //   //     </div>
+    //   //     <div class="details_container">
+    //   //       <label class="detail_label">Name</label>
+    //   //       <input class="detail_text" value="" />
+    //   //     </div>
+    //   //   </div>
+    //   // `)
+    //   // .appendTo("#" + htmlBase);
+
+    //   // console.log(id);
+
+    //   addEndpoint({ id, scenario });
+
+    //   jsPlumb.draggable(id);
+    // }
+
+    // function addDecision({ id, posX, posY, scenario }) {
+    //   // const scenario = "decision";
+    //   // console.warn(id);
+
+    //   if (typeof id == "undefined") {
+    //     numberOfElements++;
+    //     id = "decisioncontainer" + numberOfElements;
+    //     // console.log(id);
+    //   }
+
+    //   const decisionNode = `
+    //     <div class="window decision node" id="${id}" data-nodetype="decision" style="left: ${posX}px; top: ${posY}px;">
+    //       <div class="ctrl_container" style="margin-top: -10px;">
+    //         <div class="button_remove">x</div>
+    //       </div>
+    //       <div
+    //         class="details_container"
+    //         style="margin: -20px 0 0 6px; min-height: 20px; font-size: 12px; text-align: center;"
+    //       >
+    //         <span>Decision</span>
+    //       </div>
+    //     </div>
+    //   `;
+
+    //   $(decisionNode).appendTo(`#${htmlBase}`);
+
+    //   // $(`
+    //   //   <div class="window decision node" id="${id}" data-nodetype="decision" style="left: ${posX}px; top: ${posY}px;">
+    //   //     <div class="ctrl_container" style="margin-top: -10px;">
+    //   //       <div class="button_remove">x</div>
+    //   //     </div>
+    //   //     <div
+    //   //       class="details_container"
+    //   //       style="margin: -20px 0 0 6px; min-height: 20px; font-size: 12px; text-align: center;"
+    //   //     >
+    //   //       <span>Decision</span>
+    //   //     </div>
+    //   //   </div>
+    //   // `)
+    //   // .appendTo("#" + htmlBase);
+
+    //   // console.log(id);
+
+
+    //   addEndpoint({ id, scenario });
+
+    //   jsPlumb.draggable(id);
+    // }
+
     function addEndpoint({ id, scenario }) {
       if (scenario == "task") {
-        jsPlumb.addEndpoint(
+        const endpoint = jsPlumb.addEndpoint(
           id,
           {
             uuid: id + "lt-in",
@@ -204,6 +308,8 @@
             anchor: [0, 0.2]
           }
         );
+
+        console.log(endpoint.getUuid());
 
         jsPlumb.addEndpoint(
           id,
@@ -228,6 +334,7 @@
           {
             uuid: id + "tm-in",
             isTarget: true,
+            // anchor: [0.5, 0, 0, -1, 100, 0],
             anchor: [0.5, 0, 0, -1, 0, 0],
           }
         );
@@ -264,10 +371,10 @@
     }
 
     function saveFlowchart() {
-      const nodes = [];
+      var nodes = [];
 
-      $(".node").each((idx, elem) => {
-        const $elem = $(elem);
+      $(".node").each(function (idx, elem) {
+        var $elem = $(elem);
         nodes.push({
           blockId: $elem.attr("id"),
           nodetype: $elem.attr("data-nodetype"),
@@ -276,28 +383,52 @@
         });
       });
 
-      const connections = [];
+      var connections = [];
 
       $.each(jsPlumb.getConnections(), (idx, connection) => {
+        // console.log(connection.getUuids()); // ["decisioncontainer1rm-out", "decisioncontainer2lm-in"]
 
         connections.push({
-          uuids: connection.getUuids()
+          // connectionId: connection.id,
+          sourceId: connection.sourceId,
+          targetId: connection.targetId,
+          uuids: connection.getUuids(),
+          anchors: $.map(connection.endpoints, endpoint => {
+            console.error(endpoint.getUuid());
+            // console.log(endpoint)
+
+            return [
+              [
+                endpoint.anchor.x, 
+                endpoint.anchor.y, 
+                // endpoint.anchor.orientation[0], 
+                // endpoint.anchor.orientation[1],
+                // endpoint.anchor.offsets[0],
+                // endpoint.anchor.offsets[1]
+              ]
+            ];
+
+          })
         });
       });
 
-      const flowChart = {};
+      var flowChart = {};
       flowChart.nodes = nodes;
       flowChart.connections = connections;
       flowChart.numberOfElements = numberOfElements;
-      const flowChartJson = JSON.stringify(flowChart);
+
+      // console.log(flowChart);
+
+      var flowChartJson = JSON.stringify(flowChart);
+      // console.log(flowChartJson);
 
       $("#jsonOutput").val(flowChartJson);
     }
 
     function loadFlowchart() {
-      const flowChartJson = $("#jsonOutput").val();
-      const flowChart = JSON.parse(flowChartJson);
-      const nodes = flowChart.nodes;
+      var flowChartJson = $("#jsonOutput").val();
+      var flowChart = JSON.parse(flowChartJson);
+      var nodes = flowChart.nodes;
 
       $.each(nodes, (index, elem) => {
         const id = elem.blockId;
@@ -305,19 +436,30 @@
         const posY = elem.positionY;
 
         if (elem.nodetype == "task") {
+          // addTask({ id, posX, posY, scenario: "task" });
           addNode({ id, posX, posY, scenario: "task" });
           repositionElement({ id, posX, posY });
+          // console.error(id);
         }
 
         if (elem.nodetype == "decision") {
+          // addDecision({ id, posX, posY, scenario: "decision" });
           addNode({ id, posX, posY, scenario: "decision" });
           repositionElement({ id, posX, posY });
+          // console.error(id);
         }
       });
 
-      const connections = flowChart.connections;
+      var connections = flowChart.connections;
 
       $.each(connections, function (index, elem) {
+        console.log(elem)
+        // jsPlumb.connect({
+        //   source: elem.sourceId,
+        //   target: elem.targetId,
+        //   anchors: elem.anchors
+        // });
+
         jsPlumb.connect({
           uuids: elem.uuids
         })
@@ -327,8 +469,9 @@
     }
 
     function repositionElement({ id, posX, posY }) {
-      $(`#${id}`).css("left", posX);
-      $(`#${id}`).css("top", posY);
+      console.log(id);
+      $("#" + id).css("left", posX);
+      $("#" + id).css("top", posY);
       jsPlumb.repaint(id);
     }
   </script>

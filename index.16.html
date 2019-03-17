@@ -275,7 +275,7 @@
         jsPlumb.empty("drawingArea");
       });
 
-      $("#" + htmlBase).on("click", ".button_remove", () => {
+      $("#" + htmlBase).on("click", ".button_remove", function () {
         var parentnode = $(this)[0].parentNode.parentNode;
         jsPlumb.deleteConnectionsForElement(parentnode);
         jsPlumb.removeAllEndpoints(parentnode);
