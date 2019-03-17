@@ -222,7 +222,7 @@
     var numberOfElements = 0;
     var htmlBase = "drawingArea";
 
-    jsPlumb.ready(() => {
+    jsPlumb.ready(function () {
 
       jsPlumb.draggable(".window");
 
@@ -235,7 +235,6 @@
         EndpointHoverStyle: { fill: "#224492" },
         PaintStyle: { stroke: '#e85050', strokeWidth: 2 },
         HoverPaintStyle: { stroke: "#9e1b1b", strokeWidth: 2 },
-
         Connector: [
           "Flowchart",
           {
@@ -246,7 +245,6 @@
             cornerRadius: 2
           }
         ],
-        
         ConnectionOverlays: [
           ["Arrow", {
             location: 1,
@@ -263,7 +261,7 @@
       // });
 
       // 不能自己连自己
-      jsPlumb.bind("beforeDrop", ({ sourceId, targetId }, originalEvent) => {
+      jsPlumb.bind("beforeDrop", function ({ sourceId, targetId }, originalEvent) {
         if (sourceId == targetId) {
           return false;
         }
@@ -271,11 +269,11 @@
         return true;
       });
 
-      $("#resetButton").on("click", () => {
+      $("#resetButton").on("click", function () {
         jsPlumb.empty("drawingArea");
       });
 
-      $("#" + htmlBase).on("click", ".button_remove", () => {
+      $("#" + htmlBase).on("click", ".button_remove", function () {
         var parentnode = $(this)[0].parentNode.parentNode;
         jsPlumb.deleteConnectionsForElement(parentnode);
         jsPlumb.removeAllEndpoints(parentnode);
@@ -312,20 +310,20 @@
         }
       });
 
-      $("#saveButton").click(() => {
+      $("#saveButton").click(function () {
         saveFlowchart();
       });
 
-      $("#loadButton").click(() => {
+      $("#loadButton").click(function () {
         loadFlowchart();
       });
     });
 
-    function addTask({ id, posX, posY }) {
+    function addTask({id, posX, posY}) {
       const scenario = "task";
       // console.warn(id);
 
-      if (typeof id == "undefined") {
+      if (typeof id === "undefined") {
         numberOfElements++;
         id = "taskcontainer" + numberOfElements;
         // console.log(id);
@@ -346,16 +344,16 @@
 
       // console.log(id)
 
-      addEndpoint({ id, scenario });
+      addEndpoint({ id, scenario })
 
       jsPlumb.draggable(id);
     }
 
-    function addDecision({ id, posX, posY }) {
+    function addDecision({id, posX, posY}) {
       const scenario = "decision";
       // console.warn(id);
 
-      if (typeof id == "undefined") {
+      if (typeof id === "undefined") {
         numberOfElements++;
         id = "decisioncontainer" + numberOfElements;
         // console.log(id);
@@ -378,7 +376,7 @@
 
       // console.log(id)
 
-      addEndpoint({ id, scenario });
+      addEndpoint({ id, scenario })
 
       jsPlumb.draggable(id);
     }
@@ -432,32 +430,32 @@
             anchor: "Right"
           }
         );
+
+        return;
       }
 
-      if (scenario == "decision") {
-        jsPlumb.addEndpoint(
-          id,
-          {
-            uuid: id + "lm-in",
-            isTarget: true,
-            anchor: [0, 0.5]
-          }
-        );
+      jsPlumb.addEndpoint(
+        id,
+        {
+          uuid: id + "lm-in",
+          isTarget: true,
+          anchor: [0, 0.5]
+        }
+      );
 
-        jsPlumb.addEndpoint(
-          id,
-          {
-            uuid: id + "rm-out",
-            isSource: true,
-            anchor: "Right"
-          }
-        );
-      }
+      jsPlumb.addEndpoint(
+        id,
+        {
+          uuid: id + "rm-out",
+          isSource: true,
+          anchor: "Right"
+        }
+      );
+      
     }
 
     function saveFlowchart() {
-      var nodes = [];
-
+      var nodes = []
       $(".node").each(function (idx, elem) {
         var $elem = $(elem);
         nodes.push({
@@ -470,7 +468,7 @@
 
       var connections = [];
 
-      $.each(jsPlumb.getConnections(), (idx, connection) => {
+      $.each(jsPlumb.getConnections(), function (idx, connection) {
         // console.log(connection.getUuids()); // ["decisioncontainer1rm-out", "decisioncontainer2lm-in"]
 
         connections.push({
@@ -478,7 +476,7 @@
           sourceId: connection.sourceId,
           targetId: connection.targetId,
           uuids: connection.getUuids(),
-          anchors: $.map(connection.endpoints, endpoint => {
+          anchors: $.map(connection.endpoints, function(endpoint) {
             console.error(endpoint.getUuid());
             // console.log(endpoint)
 
@@ -515,11 +513,10 @@
       var flowChart = JSON.parse(flowChartJson);
       var nodes = flowChart.nodes;
 
-      $.each(nodes, (index, elem) => {
+      $.each(nodes, function (index, elem) {
         const id = elem.blockId;
         const posX = elem.positionX;
         const posY = elem.positionY;
-        
         if (elem.nodetype == "task") {
           addTask({ id, posX, posY });
           repositionElement({ id, posX, posY });
