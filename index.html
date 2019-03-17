@@ -6,7 +6,171 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <link rel="stylesheet" href="./index.css">
+  <!-- <link rel="stylesheet" href="./index.css"> -->
+  <style>
+    .window {}
+
+    .window:hover {
+      cursor: pointer;
+    }
+
+    .menu {
+      background-color: #EFEFEF;
+      border: 1px solid #346789;
+      box-shadow: 2px 2px 5px #AAAAAA;
+      color: black;
+      min-height: 3em;
+      position: absolute;
+      min-width: 5em;
+    }
+
+    .task {
+      background-color: #EEEEEF;
+      border: 1px solid #346789;
+      border-radius: 0.5em;
+      box-shadow: 2px 2px 5px #AAAAAA;
+      color: black;
+      min-height: 3em;
+      position: absolute;
+      min-width: 5em;
+    }
+
+    /* Start End */
+    .point {
+      background-color: #333333;
+      border: 1px solid #AAAAAA;
+      border-radius: 50%;
+      box-shadow: 2px 2px 5px #AAAAAA;
+      color: white;
+      min-width: 50px;
+      min-height: 30px;
+      font-size: 11pt;
+      padding: 10px;
+      position: absolute;
+      text-align: center;
+    }
+
+    .point:hover {
+      box-shadow: 2px 2px 19px #AAAAAA;
+    }
+
+    .decision {
+      /* transform: rotate(-45deg); */
+      overflow: hidden;
+      border: 1px solid #346789;
+      border-radius: 0.3em;
+      color: black;
+      backface-visibility: hidden;
+      background: none repeat scroll 0 0 #F4F4F4;
+      box-shadow: 0 0 0 1px #CCCCCC;
+      color: #000000;
+      display: block;
+      height: 80px;
+      overflow: hidden;
+      /* position: relative; */
+      position: absolute;
+      text-decoration: none;
+      width: 80px;
+    }
+
+    .decision .ctrl_container {
+      display: table-cell;
+      height: 80px;
+      padding: 0 10px;
+      text-align: center;
+      /* transform: rotate(45deg); */
+      vertical-align: middle;
+      width: 80px;
+    }
+
+    .button {
+      text-align: center;
+      border: 1px solid;
+      margin: 5px;
+    }
+
+    .button:hover {
+      cursor: pointer;
+    }
+
+    .menu_button {
+      padding: 5px;
+    }
+
+    .menu_button:hover {
+      background-color: #AAAAAA;
+      color: black;
+    }
+
+    .button_add {
+      background-color: #00CC00;
+      float: left;
+      border-radius: 50%;
+      box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
+      padding: 2px;
+      height: 25px;
+      width: 25px;
+      color: grey;
+    }
+
+    .button_add:hover {
+      background-color: #00AA00;
+      color: black;
+    }
+
+    .button_remove {
+      font-size: 9pt;
+      color: darkgrey;
+      border-radius: 30%;
+      box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
+      padding: 5px;
+      min-width: 10px;
+      max-width: 15px;
+      text-align: center;
+    }
+
+    .task .button_remove {
+      float: right;
+    }
+
+    .decision .button_remove {
+      margin: auto auto;
+    }
+
+    .button_remove:hover {
+      background-color: darkred;
+      color: white;
+    }
+
+    .menu_button_container {
+      margin: 5px;
+    }
+
+    .ctrl_container {
+      margin: 5px;
+      height: 40px;
+    }
+
+    .details_container {
+      margin: 5px;
+      min-height: 40px;
+    }
+
+    .detail_label {
+      font-size: 9pt;
+      color: grey;
+    }
+
+    .detail_text {
+      width: 80px;
+      font-size: 10pt;
+    }
+
+    ._jsPlumb_connector,
+    ._jsPlumb_startpoint {
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
@@ -46,18 +210,13 @@
     id="jsonOutput"
     style="width:100%; height:140px;"
   >
-    {"nodes":[{"blockId":"taskcontainer1","nodetype":"task","positionX":267,"positionY":100},{"blockId":"taskcontainer2","nodetype":"task","positionX":519,"positionY":123},{"blockId":"taskcontainer3","nodetype":"task","positionX":163,"positionY":404},{"blockId":"decisioncontainer4","nodetype":"decision","positionX":1286,"positionY":284},{"blockId":"decisioncontainer5","nodetype":"decision","positionX":522,"positionY":390},{"blockId":"taskcontainer6","nodetype":"task","positionX":953,"positionY":283}],"connections":[{"sourceId":"taskcontainer2","targetId":"taskcontainer6","uuids":["taskcontainer2rm-out","taskcontainer6lm-in"],"anchors":[[1,0.5],[0,0.5]]},{"sourceId":"decisioncontainer5","targetId":"taskcontainer6","uuids":["decisioncontainer5rm-out","taskcontainer6lb-in"],"anchors":[[1,0.5],[0,0.8]]},{"sourceId":"taskcontainer3","targetId":"decisioncontainer5","uuids":["taskcontainer3rm-out","decisioncontainer5lm-in"],"anchors":[[1,0.5],[0,0.5]]},{"sourceId":"taskcontainer1","targetId":"taskcontainer2","uuids":["taskcontainer1rm-out","taskcontainer2lt-in"],"anchors":[[1,0.5],[0,0.2]]},{"sourceId":"taskcontainer6","targetId":"decisioncontainer4","uuids":["taskcontainer6rm-out","decisioncontainer4lm-in"],"anchors":[[1,0.5],[0,0.5]]}],"numberOfElements":6}
+   {"nodes":[{"blockId":"taskcontainer1","nodetype":"task","positionX":441,"positionY":207},{"blockId":"decisioncontainer4","nodetype":"decision","positionX":1413,"positionY":361},{"blockId":"taskcontainer5","nodetype":"task","positionX":482,"positionY":520},{"blockId":"taskcontainer6","nodetype":"task","positionX":923,"positionY":365},{"blockId":"taskcontainer7","nodetype":"task","positionX":674,"positionY":86},{"blockId":"taskcontainer8","nodetype":"task","positionX":60,"positionY":454}],"connections":[{"sourceId":"taskcontainer6","targetId":"decisioncontainer4","uuids":["taskcontainer6rm-out","decisioncontainer4lm-in"],"anchors":[[1,0.5],[0,0.5]]},{"sourceId":"taskcontainer5","targetId":"taskcontainer6","uuids":["taskcontainer5rm-out","taskcontainer6lb-in"],"anchors":[[1,0.5],[0,0.8]]},{"sourceId":"taskcontainer1","targetId":"taskcontainer6","uuids":["taskcontainer1rm-out","taskcontainer6lt-in"],"anchors":[[1,0.5],[0,0.2]]},{"sourceId":"taskcontainer7","targetId":"taskcontainer6","uuids":["taskcontainer7rm-out","taskcontainer6tm-in"],"anchors":[[1,0.5],[0.5,0]]},{"sourceId":"taskcontainer8","targetId":"taskcontainer5","uuids":["taskcontainer8rm-out","taskcontainer5lm-in"],"anchors":[[1,0.5],[0,0.5]]}],"numberOfElements":8}
   </textarea>
 
   <script src="https://cdn.bootcss.com/jquery/2.2.1/jquery.js"></script>
-  <script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
   <script src="https://cdn.bootcss.com/jsPlumb/2.9.0/js/jsplumb.js"></script>
-  <!-- <script src="https://cdn.bootcss.com/jsPlumb/1.5.5/jquery.jsPlumb.js"></script> -->
 
   <script>
-    // https://stackoverflow.com/questions/7405637/save-and-load-a-flowchart-on-jsplumb
-    // https://stackoverflow.com/questions/20620719/save-and-load-jsplumb-flowchart-including-exact-anchors-and-connections
-
     var offsetX = 0;
     var offsetY = 0; // 开始拖拽时鼠标指针位于元素的坐标值
     var numberOfElements = 0;
@@ -97,9 +256,9 @@
         ]
       });
 
-        jsPlumb.bind("connection", function (conn, originalEvent) {
-          console.log(conn.targetEndpoint.getUuid());
-        });
+      // jsPlumb.bind("connection", function (conn, originalEvent) {
+      //   console.log(conn.targetEndpoint.getUuid());
+      // });
 
       // 不能自己连自己
       jsPlumb.bind("beforeDrop", function ({ sourceId, targetId }, originalEvent) {
@@ -183,11 +342,11 @@
       `)
       .appendTo("#" + htmlBase);
 
-      // console.log($("#" + id))
+      // console.log(id)
 
       addEndpoint({ id, scenario })
 
-      jsPlumb.draggable($("#" + id));
+      jsPlumb.draggable(id);
     }
 
     function addDecision({id, posX, posY}) {
@@ -215,17 +374,17 @@
       `)
       .appendTo("#" + htmlBase);
 
-      // console.log($("#" + id))
+      // console.log(id)
 
       addEndpoint({ id, scenario })
 
-      jsPlumb.draggable($("#" + id));
+      jsPlumb.draggable(id);
     }
 
     function addEndpoint({ id, scenario }) {
       if (scenario == "task") {
         const endpoint = jsPlumb.addEndpoint(
-          $("#" + id),
+          id,
           {
             uuid: id + "lt-in",
             isTarget: true,
@@ -236,7 +395,7 @@
         console.log(endpoint.getUuid());
 
         jsPlumb.addEndpoint(
-          $("#" + id),
+          id,
           {
             uuid: id + "lm-in",
             isTarget: true,
@@ -245,7 +404,7 @@
         );
 
         jsPlumb.addEndpoint(
-          $("#" + id),
+          id,
           {
             uuid: id + "lb-in",
             isTarget: true,
@@ -254,7 +413,7 @@
         );
 
         jsPlumb.addEndpoint(
-          $("#" + id),
+          id,
           {
             uuid: id + "tm-in",
             isTarget: true,
@@ -264,7 +423,7 @@
         );
 
         jsPlumb.addEndpoint(
-          $("#" + id),
+          id,
           {
             uuid: id + "rm-out",
             isSource: true,
@@ -276,7 +435,7 @@
       }
 
       jsPlumb.addEndpoint(
-        $("#" + id),
+        id,
         {
           uuid: id + "lm-in",
           isTarget: true,
@@ -285,7 +444,7 @@
       );
 
       jsPlumb.addEndpoint(
-        $("#" + id),
+        id,
         {
           uuid: id + "rm-out",
           isSource: true,
@@ -299,9 +458,6 @@
       var nodes = []
       $(".node").each(function (idx, elem) {
         var $elem = $(elem);
-        var endpoints = jsPlumb.getEndpoints($elem.attr("id"));
-        // console.log("endpoints of " + $elem.attr("id"));
-        // console.log(endpoints);
         nodes.push({
           blockId: $elem.attr("id"),
           nodetype: $elem.attr("data-nodetype"),
@@ -363,13 +519,13 @@
         const posY = elem.positionY;
         if (elem.nodetype == "task") {
           addTask({ id, posX, posY });
-          repositionElement(id, posX, posY);
+          repositionElement({ id, posX, posY });
           // console.error(id);
         }
 
         if (elem.nodetype == "decision") {
           addDecision({ id, posX, posY });
-          repositionElement(id, posX, posY);
+          repositionElement({ id, posX, posY });
           // console.error(id);
         }
       });
