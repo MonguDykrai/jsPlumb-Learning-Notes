@@ -762,3 +762,7 @@ References:
 <http://jsfiddle.net/t3nbL/1/>
 
 <https://stackoverflow.com/questions/20620719/save-and-load-jsplumb-flowchart-including-exact-anchors-and-connections>
+
+## jsPlumb.repaintEverything()
+
+![](./images/jsPlumb.repaintEverything.gif)

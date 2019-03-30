@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .box {
+      width: 200px;
+      height: 100px;
+      border: 1px solid red;
+      transition: all .75s ease;
+    }
+
+    .toggle {
+      height: 40px;
+    }
+  </style>
+</head>
+
+<body>
+  <button id="btn">toggle</button>
+  <div class="box" id="box"></div>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://cdn.bootcss.com/jsPlumb/2.9.0/js/jsplumb.js"></script>
+  <script>
+    $(function () {
+      $('#btn').on('click', function (e) {
+        $('.box').toggleClass('toggle');
+        setTimeout(() => {
+          jsPlumb.repaintEverything();
+        }, 800);
+      });
+
+      setTimeout(() => {
+        jsPlumb.addEndpoint('box', {
+          anchor: "Left"
+        });
+
+        jsPlumb.addEndpoint('box', {
+          anchor: "Right"
+        });
+      }, 16);
+    });
+
+  </script>
+</body>
+
+</html>

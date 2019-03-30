@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .box,
+    .box2 {
+      width: 200px;
+      height: 40px;
+      border: 1px solid red;
+    }
+
+    .box2 {
+      height: 100px;
+    }
+
+    .toggle {
+      height: 40px;
+    }
+  </style>
+</head>
+
+<body>
+  <button id="btn">toggle</button>
+  <div style="height: 100px;">
+    <div class="box" id="box"></div>
+  </div>
+  <div class="box2" id="box2" style="position: absolute; left: 300px;"></div>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://cdn.bootcss.com/jsPlumb/2.9.0/js/jsplumb.js"></script>
+  <script>
+    $(function () {
+      let height = 40;
+      $('#btn').on('click', function (e) {
+        const timerId = setInterval(() => {
+          height += 4;
+          if (height <= 100) {
+            console.log(1)
+            $('.box').css('height', height);
+            jsPlumb.repaintEverything();
+          }
+        }, 30);
+        // $('.box').toggleClass('toggle');
+        // setTimeout(() => {
+        //   jsPlumb.repaintEverything();
+        // }, 800);
+      });
+
+      setTimeout(() => {
+        jsPlumb.addEndpoint('box', {
+          anchor: "Left"
+        });
+
+        jsPlumb.addEndpoint('box', {
+          anchor: "Right",
+          isSource: true
+        });
+
+        jsPlumb.addEndpoint('box2', {
+          anchor: "Left",
+          isTarget: true
+        });
+
+        jsPlumb.addEndpoint('box2', {
+          anchor: "Right"
+        });
+      }, 16);
+    });
+
+  </script>
+</body>
+
+</html>
